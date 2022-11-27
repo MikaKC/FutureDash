@@ -38,6 +38,7 @@ DWORD WINAPI thread_func(void* hModule) {
 
     auto base = gd::base;
     
+    // Address, Hook, Original
     CREATE_HOOK(0x1907b0, MenuLayer_init_H, MenuLayer_init);
     CREATE_HOOK(0x18c8e0, LoadingLayer_loadAssets_H, LoadingLayer_loadAssets);
 
