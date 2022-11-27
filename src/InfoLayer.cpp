@@ -37,7 +37,7 @@ void InfoLayer::setup()
     auto gameStats = gd::GameStatsManager::sharedState();
     
     this->simplePlayerSprite = gd::SimplePlayer::create(gd::GameManager::sharedState()->getPlayerFrame());
-    this->simplePlayerSprite->setPosition({m_pLrSize.width / 2 - 40, 0});
+    this->simplePlayerSprite->setPosition({m_pLrSize.width / 2 - 60, 0});
     this->simplePlayerSprite->setColor(gd::GameManager::sharedState()->colorForIdx(gd::GameManager::sharedState()->getPlayerColor()));
     this->simplePlayerSprite->setSecondColor(gd::GameManager::sharedState()->colorForIdx(gd::GameManager::sharedState()->getPlayerColor2()));
     this->simplePlayerSprite->setGlowOutline(gd::GameManager::sharedState()->getPlayerGlow());
@@ -58,7 +58,7 @@ void InfoLayer::setup()
     buttonSpriteBtn->setPositionY(-m_pLrSize.height / 2 + 10);
 
     auto textArea = gd::TextArea::create("chatFont.fnt", false, std::string("<cb>Name</c>: " + accountManager->m_sUsername + "\n<cy>Stars</c>: " + std::to_string(gameStats->m_pPlayerStats->valueForKey("6")->intValue()) + "\n<cy>Gold</c> coins: " + std::to_string(gameStats->m_pPlayerStats->valueForKey("8")->intValue()) + "\n<cb>Silver</c> coins: " + std::to_string(gameStats->m_pPlayerStats->valueForKey("12")->intValue()) + "\n<cr>Demons</c>: " + std::to_string(gameStats->m_pPlayerStats->valueForKey("5")->intValue())), .75f, 100, 10, {0.5f, 0.5f});
-    textArea->setPosition({0, 0});
+    textArea->setPosition({-20, 0});
 
     // Need to make a new variable because
     auto leftArrowSpr = CCSprite::createWithSpriteFrameName("navArrowBtn_001.png");
@@ -68,13 +68,13 @@ void InfoLayer::setup()
     leftArrow->setScale(0.5f);
     leftArrow->m_fBaseScale = 0.5f;
     leftArrow->m_fScaleMultiplier = 1.25f;
-    leftArrow->setPosition({50, 0});
+    leftArrow->setPosition({30, 0});
 
     auto rightArrow = gd::CCMenuItemSpriteExtra::create(CCSprite::createWithSpriteFrameName("navArrowBtn_001.png"), this, menu_selector(InfoLayer::onArrowRightPressed));
     rightArrow->setScale(0.5f);
     rightArrow->m_fBaseScale = 0.5f;
     rightArrow->m_fScaleMultiplier = 1.25f;
-    rightArrow->setPosition({120, 0});
+    rightArrow->setPosition({100, 0});
 
     // Stuff
     m_pButtonMenu->addChild(simplePlayerSprite, 50);
