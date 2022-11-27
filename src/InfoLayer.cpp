@@ -57,7 +57,7 @@ void InfoLayer::setup()
     auto buttonSpriteBtn = gd::CCMenuItemSpriteExtra::create(buttonSprite, this, menu_selector(Callbacks::onMoreInfoPressed));
     buttonSpriteBtn->setPositionY(-m_pLrSize.height / 2 + 10);
 
-    auto textArea = gd::TextArea::create("chatFont.fnt", false, std::string("<cb>Name</c>: " + accountManager->m_sUsername + "\n<cy>Stars</c>: " + std::to_string(gameStats->m_pPlayerStats->valueForKey("6")->intValue()) + "\n<cy>Gold</c> coins: " + std::to_string(gameStats->m_pPlayerStats->valueForKey("8")->intValue()) + "\n<cb>Silver</c> coins: " + std::to_string(gameStats->m_pPlayerStats->valueForKey("12")->intValue()) + "\n<cr>Demons</c>: " + std::to_string(gameStats->m_pPlayerStats->valueForKey("5")->intValue())), .75f, 100, 10, {0.5f, 0.5f});
+    auto textArea = gd::TextArea::create("chatFont.fnt", false, std::string("<cg>Name</c>: " + accountManager->m_sUsername + "\n<cp>Stars</c>: " + std::to_string(gameStats->m_pPlayerStats->valueForKey("6")->intValue()) + "\n<cy>Gold</c> coins: " + std::to_string(gameStats->m_pPlayerStats->valueForKey("8")->intValue()) + "\n<cl>Silver</c> coins: " + std::to_string(gameStats->m_pPlayerStats->valueForKey("12")->intValue()) + "\n<cr>Demons</c>: " + std::to_string(gameStats->m_pPlayerStats->valueForKey("5")->intValue())), .75f, 100, 10, {0.5f, 0.5f});
     textArea->setPosition({-20, 0});
 
     // Need to make a new variable because
