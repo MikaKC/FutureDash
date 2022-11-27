@@ -7,3 +7,5 @@ thats it
 Also releases will be pushed each time im done with a key feature
 thats all
 goodbye
+
+will make a better readme someday
