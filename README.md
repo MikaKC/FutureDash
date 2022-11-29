@@ -4,8 +4,13 @@ Just like download the source code or something and set up cmake.
 I used the matcool repo.
 thats it
 
-Also releases will be pushed each time im done with a key feature
-thats all
-goodbye
+## Things TODO:
 
-will make a better readme someday
+Settings button in LevelInfoLayer (https://www.youtube.com/watch?v=BsfxkpkHs3w&t=373s&ab_channel=GDColon)<br>
+Update to the PauseLayer (https://www.youtube.com/watch?v=BsfxkpkHs3w&t=455s&ab_channel=GDColon)
+
+
+
+Also releases will be pushed each time im done with a key feature<br>
+thats all<br><br>
+goodbye
