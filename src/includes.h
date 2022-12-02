@@ -9,6 +9,8 @@
 #include <gd.h>
 #include "utils.hpp"
 #include "Callbacks.hpp"
+#include <format>
+#include <iostream>
 
 using std::uintptr_t;
 

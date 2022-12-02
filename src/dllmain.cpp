@@ -32,15 +32,35 @@ void __fastcall LoadingLayer_loadAssets_H(gd::LoadingLayer* self, void *)
   // Load sprite sheets n stuff
 }
 
+bool (__thiscall* PauseLayer_init)(gd::PauseLayer* self);
+bool __fastcall PauseLayer_init_H(gd::PauseLayer* self, void*)
+{
+    if(!PauseLayer_init(self)) return false;
+
+
+
+    return true;
+}
+
+bool (__thiscall* LevelInfoLayer_init)(gd::LevelInfoLayer* self, gd::GJGameLevel* level);
+bool __fastcall LevelInfoLayer_init_H(gd::LevelInfoLayer* self, void*, gd::GJGameLevel* level)
+{
+    if(!LevelInfoLayer_init(self, level)) return false;
+
+    return true;
+}
+
 DWORD WINAPI thread_func(void* hModule) {
 
     MH_Initialize();
-
-    auto base = gd::base;
     
     // Address, Hook, Original
     CREATE_HOOK(0x1907b0, MenuLayer_init_H, MenuLayer_init);
     CREATE_HOOK(0x18c8e0, LoadingLayer_loadAssets_H, LoadingLayer_loadAssets);
+    CREATE_HOOK(0x175df0, LevelInfoLayer_init_H, LevelInfoLayer_init);
+    // CREATE_HOOK(0x5A020, LevelCell_loadCustomLevelCell_H, LevelCell_loadCustomLevelCell);
+
+    
 
     MH_EnableHook(MH_ALL_HOOKS);
 
