@@ -68,4 +68,13 @@ public:
     {
         gd::MoreOptionsLayer::create()->show();
     }
+    
+    void onOptionsLayerButtonPressed(cocos2d::CCObject* pSender)
+    {
+        // IDK
+        auto rs = cocos2d::CCDirector::sharedDirector()->getRunningScene();
+        auto lr = gd::OptionsLayer::create();
+        rs->addChild(lr, 100);
+        lr->showLayer(false);
+    }
 };

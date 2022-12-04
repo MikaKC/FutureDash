@@ -13,7 +13,6 @@
 #include <matdash/minhook.hpp>
 #include <matdash/boilerplate.hpp>
 
-
 bool MenuLayer_init(gd::MenuLayer* self) {
 
     if (!matdash::orig<&MenuLayer_init>(self)) return false;
@@ -51,12 +50,20 @@ bool PauseLayer_init(gd::PauseLayer* self)
 
     // TODO: Implement GJGameLevel or something 
 
+    auto winSize = CCDirector::sharedDirector()->getWinSize();
+
     int nodeCount = self->getChildrenCount();
 
     auto infoButton = gd::CCMenuItemSpriteExtra::create(CCSprite::createWithSpriteFrameName("GJ_infoBtn_001.png"), self, nullptr);
     infoButton->setScale(1.3f);
     infoButton->m_fBaseScale = 1.3f;
     infoButton->setPositionX(-209.f);
+
+    // créer le bouton 
+    auto settingsBtn = gd::CCMenuItemSpriteExtra::create(CCSprite::createWithSpriteFrameName("GJ_optionsBtn_001.png"), self, reinterpret_cast<SEL_MenuHandler>(&Callbacks::onOptionsLayerButtonPressed));
+    // positionner le bouton dans le CCMenu
+    settingsBtn->setPosition({winSize.width / 2 - 85, winSize.height / 2 - 20});
+
 
     for (int i = 0; i < nodeCount; i++)
     {
@@ -67,8 +74,35 @@ bool PauseLayer_init(gd::PauseLayer* self)
             // idk any solutions both (with mhv7) have 4 children
             if(menu->getPosition().x == 284.5f && menu->getPosition().y == 130.f)
             {
-                menu->setPositionX(320.f);
-                menu->addChild(infoButton);
+                if(menu->getChildrenCount() >= 5)
+                {
+                    menu->setPositionX(284.5f);
+                    settingsBtn->setPositionX(winSize.width / 2 - 49.5f);
+                    infoButton->setVisible(false);
+                    menu->addChild(infoButton);
+                    menu->addChild(settingsBtn);
+                } else {
+                    menu->setPositionX(320.f);
+                    menu->addChild(infoButton);
+                    menu->addChild(settingsBtn);
+                }
+
+            }
+        }
+
+        if(auto label = dynamic_cast<CCLabelBMFont*>(nodes))
+        {
+            if(label->getPositionY() == 75.f)
+            {
+                label->setVisible(false);
+            }
+        }
+
+        if(auto slider = dynamic_cast<CCLayer*>(nodes))
+        {
+            if(slider->getPositionY() == 55.f)
+            {
+                slider->setVisible(false);
             }
         }
     }
@@ -95,7 +129,6 @@ bool LevelInfoLayer_init(gd::LevelInfoLayer* self, gd::GJGameLevel* level)
 
 void mod_main(HMODULE)
 {
-	
 	#ifdef DEBUG
 		if(AllocConsole())
 		{
