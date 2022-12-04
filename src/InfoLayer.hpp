@@ -1,9 +1,9 @@
 #pragma once
 
 #include "includes.h"
-#include "AlertLayerDelegate.hpp"
+#include "BrownAlertLayer.hpp"
 
-class InfoLayer : public AlertLayerDelegate
+class InfoLayer : public BrownAlertLayer
 {
 protected:
     int m_iCurrentIcon = 0;

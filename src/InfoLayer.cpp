@@ -1,5 +1,6 @@
 #include "InfoLayer.hpp"
 #include <iostream>
+#include "Callbacks.hpp"
 
 InfoLayer* InfoLayer::create()
 {
@@ -9,7 +10,6 @@ InfoLayer* InfoLayer::create()
         ptr->autorelease();
         return ptr;
     }
-
     CC_SAFE_DELETE(ptr);
     return nullptr;
 }
