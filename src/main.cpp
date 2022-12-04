@@ -3,15 +3,17 @@
 #include "Callbacks.hpp"
 
 // Release
-#define RELEASE
+#define DEBUG
 
-#ifdef RELEASE
+#ifdef DEBUG
     #include <matdash/console.hpp>
 #endif
 
 #include <matdash.hpp>
 #include <matdash/minhook.hpp>
 #include <matdash/boilerplate.hpp>
+
+matdash::Console console = matdash::Console();
 
 bool MenuLayer_init(gd::MenuLayer* self) {
 
@@ -95,16 +97,24 @@ bool LevelInfoLayer_init(gd::LevelInfoLayer* self, gd::GJGameLevel* level)
 void mod_main(HMODULE)
 {
 
-#ifdef RELEASE
+#ifdef DEBUG
     matdash::create_console();
 #endif
 
-    matdash::Console console = matdash::Console();
     console.out << "Hello World";
 
     // Hooks
     matdash::add_hook<&LevelInfoLayer_init>(gd::base + 0x175df0);
+    console.out << "Hooked LevelInfoLayer::init";
+
     matdash::add_hook<&MenuLayer_init>(gd::base + 0x1907b0);
+    console.out << "Hooked MenuLayer::init";
+
     matdash::add_hook<&PauseLayer_init>(gd::base + 0x1E4626);
+    console.out << "Hooked PauseLayer::init";
+    
     matdash::add_hook<&LoadingLayer_loadAssets>(gd::base + 0x18C8E0);
+    console.out << "Hooked LoadingLayer::loadAssets";
+
+    console.out << "Finished hooking";
 }
