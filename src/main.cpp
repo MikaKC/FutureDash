@@ -129,26 +129,29 @@ bool LevelInfoLayer_init(gd::LevelInfoLayer* self, gd::GJGameLevel* level)
 
 void mod_main(HMODULE)
 {
-
-#ifdef DEBUG
-    matdash::create_console();
-#endif
-
-    std::cout << "Mod init";
+	#ifdef DEBUG
+		if(AllocConsole())
+		{
+			freopen("CONOUT$", "wt", stdout);
+			freopen("CONIN$", "rt", stdin);
+			std::ios::sync_with_stdio(1);
+		}
+	#endif
+	
+    std::cout << "Hello World" << std::endl;
 
     // Hooks
     matdash::add_hook<&LevelInfoLayer_init>(gd::base + 0x175df0);
-    std::cout << "Hooked LevelInfoLayer::init";
+    std::cout << "Hooked LevelInfoLayer::init" << std::endl;
 
     matdash::add_hook<&MenuLayer_init>(gd::base + 0x1907b0);
-    std::cout << "Hooked MenuLayer::init";
+    std::cout << "Hooked MenuLayer::init" << std::endl;
 
-    matdash::add_hook<&PauseLayer_init>(gd::base + 0x1E4620);
-    std::cout << "Hooked PauseLayer::init";
+    matdash::add_hook<&PauseLayer_init>(gd::base + 0x1E4626);
+    std::cout << "Hooked PauseLayer::init" << std::endl;
     
     matdash::add_hook<&LoadingLayer_loadAssets>(gd::base + 0x18C8E0);
-    std::cout << "Hooked LoadingLayer::loadAssets";
+    std::cout << "Hooked LoadingLayer::loadAssets" << std::endl;
 
-
-    std::cout << "Finished hooking";
+    std::cout << "Finished hooking" << std::endl;
 }
