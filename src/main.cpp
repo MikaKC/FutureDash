@@ -44,11 +44,9 @@ matdash::cc::thiscall<void> LoadingLayer_loadAssets(gd::LoadingLayer* self)
   return {};
 }
 
-bool PauseLayer_init(gd::PauseLayer* self)
+bool PauseLayer_customSetup(gd::PauseLayer* self)
 {
-    if(!matdash::orig<&PauseLayer_init>(self)) return false;
-
-    // TODO: Implement GJGameLevel or something 
+    if(!matdash::orig<&PauseLayer_customSetup>(self)) return false;
 
     auto winSize = CCDirector::sharedDirector()->getWinSize();
 
@@ -59,9 +57,7 @@ bool PauseLayer_init(gd::PauseLayer* self)
     infoButton->m_fBaseScale = 1.3f;
     infoButton->setPositionX(-209.f);
 
-    // créer le bouton 
     auto settingsBtn = gd::CCMenuItemSpriteExtra::create(CCSprite::createWithSpriteFrameName("GJ_optionsBtn_001.png"), self, reinterpret_cast<SEL_MenuHandler>(&Callbacks::onOptionsLayerButtonPressed));
-    // positionner le bouton dans le CCMenu
     settingsBtn->setPosition({winSize.width / 2 - 85, winSize.height / 2 - 20});
 
 
@@ -74,19 +70,24 @@ bool PauseLayer_init(gd::PauseLayer* self)
             // idk any solutions both (with mhv7) have 4 children
             if(menu->getPosition().x == 284.5f && menu->getPosition().y == 130.f)
             {
-                if(menu->getChildrenCount() >= 5)
+                if(menu->getChildrenCount() == 5)
                 {
+                    std::cout << "Playtest";
                     menu->setPositionX(284.5f);
+                    // repositionner
                     settingsBtn->setPositionX(winSize.width / 2 - 49.5f);
+                    
                     infoButton->setVisible(false);
-                    menu->addChild(infoButton);
-                    menu->addChild(settingsBtn);
-                } else {
+                } 
+                else {
+                    std::cout << "Game";
                     menu->setPositionX(320.f);
                     menu->addChild(infoButton);
                     menu->addChild(settingsBtn);
                 }
 
+                menu->addChild(infoButton);
+                menu->addChild(settingsBtn);
             }
         }
 
@@ -132,8 +133,10 @@ void mod_main(HMODULE)
 	#ifdef DEBUG
 		if(AllocConsole())
 		{
+#pragma warning(push, 0)
 			freopen("CONOUT$", "wt", stdout);
 			freopen("CONIN$", "rt", stdin);
+#pragma warning(pop)
 			std::ios::sync_with_stdio(1);
 		}
 	#endif
@@ -147,8 +150,8 @@ void mod_main(HMODULE)
     matdash::add_hook<&MenuLayer_init>(gd::base + 0x1907b0);
     std::cout << "Hooked MenuLayer::init" << std::endl;
 
-    matdash::add_hook<&PauseLayer_init>(gd::base + 0x1E4626);
-    std::cout << "Hooked PauseLayer::init" << std::endl;
+    matdash::add_hook<&PauseLayer_customSetup>(gd::base + 0x1E4620);
+    std::cout << "Hooked PauseLayer::customSetup" << std::endl;
     
     matdash::add_hook<&LoadingLayer_loadAssets>(gd::base + 0x18C8E0);
     std::cout << "Hooked LoadingLayer::loadAssets" << std::endl;
