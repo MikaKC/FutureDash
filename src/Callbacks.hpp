@@ -61,7 +61,7 @@ public:
 
         std::string allTexts(playerCube + playerShip + playerBall + playerUFO + playerWave + playerRobot + playerSpider);
         
-        ALERT("Icon info", "Ok", nullptr, allTexts);
+        ALERT("Icon info", "OK", nullptr, allTexts);
     }
 
     void onMoreOptionsLayerButtonPressed(cocos2d::CCObject* pSender)
@@ -77,4 +77,18 @@ public:
         rs->addChild(lr, 100);
         lr->showLayer(false);
     }
+	
+	void onLevelBadgeInfo(cocos2d::CCObject* pSender)
+    {
+		switch(pSender->getTag())
+		{
+			case 1:
+				ALERT("High Object Count", "OK", nullptr, "This level has more than <cr>40K</c> objects");
+			break;
+			case 2:
+				ALERT("Collab", "OK", nullptr, "This level is a collab or has been copied");
+			break;
+		}
+	}
+	
 };
