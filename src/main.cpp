@@ -111,22 +111,78 @@ bool PauseLayer_customSetup(gd::PauseLayer* self)
     return true;
 }
 
+
+const char* getTextureName(CCSprite* sprite_node) {
+	
+		auto* texture = sprite_node->getTexture();
+		CCDictElement* el;
+		
+		auto* frame_cache = CCSpriteFrameCache::sharedSpriteFrameCache();
+		auto* cached_frames = public_cast(frame_cache, m_pSpriteFrames);
+		const auto rect = sprite_node->getTextureRect();
+		CCDICT_FOREACH(cached_frames, el) {
+			auto* frame = static_cast<CCSpriteFrame*>(el->getObject());
+			if (frame->getTexture() == texture && frame->getRect().equals(rect)) {
+				return el->getStrKey();
+			}
+		}
+	return "";
+}
+
+
 bool LevelInfoLayer_init(gd::LevelInfoLayer* self, gd::GJGameLevel* level)
 {
     if(!matdash::orig<&LevelInfoLayer_init>(self, level)) return false;
 
     auto winSize = CCDirector::sharedDirector()->getWinSize();
+    auto visSize = CCDirector::sharedDirector()->getVisibleSize();
 
     auto pauseBtn = gd::CCMenuItemSpriteExtra::create(CCSprite::createWithSpriteFrameName("GJ_optionsBtn_001.png"), self, reinterpret_cast<SEL_MenuHandler>(&Callbacks::onMoreOptionsLayerButtonPressed));
-    
-    pauseBtn->setPosition({-210, winSize.height / 2 - 25});
-    pauseBtn->setScale(0.85f);
+	pauseBtn->setScale(0.85f);
     pauseBtn->m_fBaseScale = 0.85f;
+	
+	
+   // pauseBtn->setPosition({winSize.width * 0.15f, winSize.height - 25});
+ 
 
-    self->m_pPlayBtnMenu->addChild(pauseBtn);
+	auto m = CCMenu::create();
+	m->setPosition(75, winSize.height - 25);
+	m->addChild(pauseBtn);
+	self->addChild(m);
+
+
+	for(int i = 0; i < self->getChildrenCount(); i++)
+	{
+		CCObject* o = self->getChildren()->objectAtIndex(i);	
+		if(auto s = dynamic_cast<CCSprite*>(o)) 
+		{
+			
+			auto tname = getTextureName(s);
+			std::cout << i << ' ' << tname << std::endl;
+			
+			int num = 0;
+			if(strcmp(tname, "highObjectIcon_001.png") == 0) num = 1;
+			else if(strcmp(tname, "collaborationIcon_001.png") == 0) num = 2;
+			
+			if(num != 0)
+			{
+				auto newspr = CCSprite::createWithSpriteFrameName(tname);
+				newspr->setScale(s->getScale());
+				auto btn = gd::CCMenuItemSpriteExtra::create(newspr, self, menu_selector(Callbacks::onLevelBadgeInfo));
+				btn->setTag(num);
+				auto menu = CCMenu::create();
+				menu->setPosition(s->getPosition());
+				menu->addChild(btn);
+				self->addChild(menu);
+				s->setVisible(false);
+			}
+		}
+	}
 
     return true;
 }
+
+
 
 void mod_main(HMODULE)
 {
