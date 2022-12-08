@@ -57,15 +57,25 @@ public:
     {
         CreditsLayer::create()->show();
     }
+    
 
-    void hidePauseLayerUI(cocos2d::CCObject* pSender)
+    void hidePauseLayerUI(cocos2d::CCNode* pSender)
     {
-        ALERT("Error", "OK", nullptr, "This feature is not available yet!");
+       // ALERT("Error", "OK", nullptr, "This feature is not available yet!");
+	   gd::PauseLayer* self = static_cast<gd::PauseLayer*>(pSender->getUserObject());
+	   self->setVisible(false);
     }
 
-    void onPauseLayerInfoPressed(cocos2d::CCObject* pSender)
+    gd::FLAlertLayer* createInfoLayer(gd::GJGameLevel* level)
+	{
+        return reinterpret_cast<gd::FLAlertLayer*(__fastcall*)(gd::GJGameLevel*, gd::GJUserScore*)>(
+			gd::base + 0x14F4F0
+        )(level, nullptr);
+	}
+
+    void onPauseLayerInfoPressed(cocos2d::CCNode* pSender)
     {
-        
+		createInfoLayer(gd::GameManager::sharedState()->getPlayLayer()->m_level)->show();
     }
 
     void onLevelBadgeInfo(cocos2d::CCObject* pSender)
