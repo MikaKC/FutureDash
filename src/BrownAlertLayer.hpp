@@ -11,7 +11,7 @@ class BrownAlertLayer : public gd::FLAlertLayer
         cocos2d::extension::CCScale9Sprite* m_pBGSprite;
     public:
         
-        virtual bool init(float width, float height, const char* bg = "GJ_square01.png", const char* title = "")
+        virtual bool init(float width, float height, const char* bg = "GJ_square01.png", const char* title = "", bool goldFont = true)
         {
             auto winSize = cocos2d::CCDirector::sharedDirector()->getWinSize();
             this->m_pLrSize = cocos2d::CCSize { width, height };
@@ -30,7 +30,7 @@ class BrownAlertLayer : public gd::FLAlertLayer
             this->m_pLayer->addChild(this->m_pButtonMenu);
 
             if (sizeof(title) > 0) {
-                auto _title = cocos2d::CCLabelBMFont::create(title, "goldFont.fnt");
+                auto _title = goldFont ? cocos2d::CCLabelBMFont::create(title, "goldFont.fnt") : cocos2d::CCLabelBMFont::create(title, "bigFont.fnt");
 
                 _title->limitLabelWidth(this->m_pLrSize.width * 4, .75f, .2f);
                 _title->setPosition(

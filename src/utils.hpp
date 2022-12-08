@@ -26,5 +26,3 @@
 	} c; \
 	return c.get(reinterpret_cast<FriendeeClass__*>(v)); \
 }(value)
-
-
