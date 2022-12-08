@@ -75,7 +75,7 @@ public:
 
     void onPauseLayerInfoPressed(cocos2d::CCNode* pSender)
     {
-		createInfoLayer(reinterpret_cast<gd::GJGameLevel*>(pSender->getUserObject()))->show();
+		createInfoLayer(gd::GameManager::sharedState()->getPlayLayer()->m_level)->show();
     }
 
     void onLevelBadgeInfo(cocos2d::CCObject* pSender)
