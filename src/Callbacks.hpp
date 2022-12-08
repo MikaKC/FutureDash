@@ -57,6 +57,7 @@ public:
     {
         CreditsLayer::create()->show();
     }
+    
 
     void hidePauseLayerUI(cocos2d::CCNode* pSender)
     {
@@ -65,9 +66,16 @@ public:
 	   self->setVisible(false);
     }
 
-    void onPauseLayerInfoPressed(cocos2d::CCObject* pSender)
+    gd::FLAlertLayer* createInfoLayer(gd::GJGameLevel* level)
+	{
+        return reinterpret_cast<gd::FLAlertLayer*(__fastcall*)(gd::GJGameLevel*, gd::GJUserScore*)>(
+			gd::base + 0x14F4F0
+        )(level, nullptr);
+	}
+
+    void onPauseLayerInfoPressed(cocos2d::CCNode* pSender)
     {
-        
+		createInfoLayer(reinterpret_cast<gd::GJGameLevel*>(pSender->getUserObject()))->show();
     }
 
     void onLevelBadgeInfo(cocos2d::CCObject* pSender)

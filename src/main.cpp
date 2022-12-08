@@ -162,6 +162,7 @@ const char* getTextureName(CCSprite* sprite_node) {
 }
 
 
+
 bool PauseLayer_customSetup(gd::PauseLayer* self)
 {
 	if(!matdash::orig<&PauseLayer_customSetup>(self)) return false;
@@ -217,6 +218,7 @@ bool PauseLayer_customSetup(gd::PauseLayer* self)
 						infoButton->setScale(1.3f);
 						infoButton->m_fBaseScale = 1.3f;
 						infoButton->setPositionX(-209.f);
+						infoButton->setUserObject(gd::GameManager::sharedState()->getPlayLayer()->m_level);
 						
 						//insert child manually at index 0 (left) 
 						menu->getChildren()->insertObject(infoButton, 0);
