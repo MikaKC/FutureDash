@@ -58,9 +58,11 @@ public:
         CreditsLayer::create()->show();
     }
 
-    void hidePauseLayerUI(cocos2d::CCObject* pSender)
+    void hidePauseLayerUI(cocos2d::CCNode* pSender)
     {
-        ALERT("Error", "OK", nullptr, "This feature is not available yet!");
+       // ALERT("Error", "OK", nullptr, "This feature is not available yet!");
+	   gd::PauseLayer* self = static_cast<gd::PauseLayer*>(pSender->getUserObject());
+	   self->setVisible(false);
     }
 
     void onPauseLayerInfoPressed(cocos2d::CCObject* pSender)
