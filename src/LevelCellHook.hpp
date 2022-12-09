@@ -4,6 +4,6 @@
 class LevelCellHook : public gd::LevelCell
 {
 public:
-    static void loadCustomLevelCell(gd::LevelCell* self);
-    static void LoadHooks();
+	static void loadCustomLevelCell(gd::LevelCell* self);
+	static void LoadHooks();
 };

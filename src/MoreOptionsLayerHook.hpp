@@ -5,6 +5,6 @@
 class MoreOptionsLayerHook : public gd::MoreOptionsLayer
 {
 public:
-    static bool init(gd::MoreOptionsLayer* self);
-    static void LoadHooks();
+	static bool init(gd::MoreOptionsLayer* self);
+	static void LoadHooks();
 };

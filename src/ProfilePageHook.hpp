@@ -5,6 +5,7 @@
 class ProfilePageHook : gd::ProfilePage
 {
 public:
-    static void loadPageWithUserInfo(gd::ProfilePage* self, gd::GJUserScore *score);
-    static void LoadHooks();
+	static void loadPageWithUserInfo(gd::ProfilePage* self, gd::GJUserScore *score);
+	static void LoadHooks();
+	void onModeratorBadgeInfo(cocos2d::CCObject* pSender);
 };

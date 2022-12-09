@@ -74,6 +74,6 @@ void LevelCellHook::loadCustomLevelCell(gd::LevelCell* self) {
 
 void LevelCellHook::LoadHooks()
 {
-    matdash::add_hook<&LevelCellHook::loadCustomLevelCell>(gd::base + 0x5A020);
-    std::cout << "Hooked LevelCell::loadCustomLevelCell" << std::endl;
+	matdash::add_hook<&LevelCellHook::loadCustomLevelCell>(gd::base + 0x5A020);
+	std::cout << "Hooked LevelCell::loadCustomLevelCell" << std::endl;
 }

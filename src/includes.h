@@ -8,7 +8,6 @@
 #include <matdash.hpp>
 #include <matdash/minhook.hpp>
 #include "utils.hpp"
-#include "Callbacks.hpp"
 
 using std::uintptr_t;
 

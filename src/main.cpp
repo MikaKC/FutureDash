@@ -14,7 +14,7 @@
 //#define DEBUG
 
 #ifdef DEBUG
-    #include <matdash/console.hpp>
+	#include <matdash/console.hpp>
 #endif
 
 matdash::cc::thiscall<void> LoadingLayer_loadAssets(gd::LoadingLayer* self)
@@ -40,21 +40,21 @@ void mod_main(HMODULE)
 		}
 	#endif
 	
-    std::cout << "Loading hooks" << std::endl;
+	std::cout << "Loading hooks" << std::endl;
 
-    // Hooks
-    
-    matdash::add_hook<&LoadingLayer_loadAssets>(gd::base + 0x18C8E0);
-    std::cout << "Hooked LoadingLayer::loadAssets" << std::endl;
+	// Hooks
+	
+	matdash::add_hook<&LoadingLayer_loadAssets>(gd::base + 0x18C8E0);
+	std::cout << "Hooked LoadingLayer::loadAssets" << std::endl;
 
-    LevelInfoLayerHook::LoadHooks();
-    MenuLayerHook::LoadHooks();
-    PauseLayerHook::LoadHooks();
-    OptionsLayerHook::LoadHooks();
-    LevelCellHook::LoadHooks();
-    MoreOptionsLayerHook::LoadHooks();
-    ProfilePageHook::LoadHooks();
+	LevelInfoLayerHook::LoadHooks();
+	MenuLayerHook::LoadHooks();
+	PauseLayerHook::LoadHooks();
+	OptionsLayerHook::LoadHooks();
+	LevelCellHook::LoadHooks();
+	MoreOptionsLayerHook::LoadHooks();
+	ProfilePageHook::LoadHooks();
 
 
-    std::cout << "Finished hooking" << std::endl;
+	std::cout << "Finished hooking" << std::endl;
 }
