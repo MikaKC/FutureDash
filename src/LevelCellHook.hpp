@@ -1,9 +1,9 @@
 #pragma once
 #include "includes.h"
 
-class LevelCellHook : public gd::LevelCell
+class LevelCellHook : public LevelCell
 {
 public:
-    static void loadCustomLevelCell(gd::LevelCell* self);
-    static void LoadHooks();
+	static void loadCustomLevelCell(LevelCell* self);
+	static void LoadHooks();
 };

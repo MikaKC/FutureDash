@@ -1,10 +1,10 @@
 #include "LevelCellHook.hpp"
 #include "AbbreviatedLabels.hpp"
 
-void LevelCellHook::loadCustomLevelCell(gd::LevelCell* self) {
+void LevelCellHook::loadCustomLevelCell(LevelCell* self) {
 	matdash::orig<&LevelCellHook::loadCustomLevelCell>(self);
 	
-	if(gd::GameManager::sharedState()->getGameVariable("2300")) return;
+	if(GM->getGameVariable("2300")) return;
 	
 	auto layer = (CCLayer*)self->getChildren()->objectAtIndex(1);
 
@@ -36,7 +36,7 @@ void LevelCellHook::loadCustomLevelCell(gd::LevelCell* self) {
 				float oldScale = label->getScale();
 				float newscale = oldScale * scaleMult;
 				newspr->setScale(newscale);
-				auto btn = gd::CCMenuItemSpriteExtra::create(newspr, self, menu_selector(AbbreviatedLabels::Callbacks::onLabel));
+				auto btn = CCMenuItemSpriteExtra::create(newspr, self, menu_selector(AbbreviatedLabels::Callbacks::onLabel));
 				btn->setTag(downloads);
 				btn->setUserObject(new AbbreviatedLabels::ScaleParams(oldScale, newscale));
 				
@@ -57,7 +57,7 @@ void LevelCellHook::loadCustomLevelCell(gd::LevelCell* self) {
 				float newscale = oldScale * scaleMult;
 				newspr->setScale(newscale);
 					
-				auto btn = gd::CCMenuItemSpriteExtra::create(newspr, self, menu_selector(AbbreviatedLabels::Callbacks::onLabel));
+				auto btn = CCMenuItemSpriteExtra::create(newspr, self, menu_selector(AbbreviatedLabels::Callbacks::onLabel));
 				btn->setTag(likes);
 				btn->setUserObject(new AbbreviatedLabels::ScaleParams(oldScale, newscale));
 				
@@ -74,6 +74,6 @@ void LevelCellHook::loadCustomLevelCell(gd::LevelCell* self) {
 
 void LevelCellHook::LoadHooks()
 {
-    matdash::add_hook<&LevelCellHook::loadCustomLevelCell>(gd::base + 0x5A020);
-    std::cout << "Hooked LevelCell::loadCustomLevelCell" << std::endl;
+	matdash::add_hook<&LevelCellHook::loadCustomLevelCell>(base + 0x5A020);
+	std::cout << "Hooked LevelCell::loadCustomLevelCell" << std::endl;
 }
