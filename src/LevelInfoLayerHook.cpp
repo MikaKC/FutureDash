@@ -1,13 +1,13 @@
 #include "LevelInfoLayerHook.hpp"
-
-bool LevelInfoLayerHook::init(gd::LevelInfoLayer* self, gd::GJGameLevel* level)
+#include "ModToolbox.hpp"
+bool LevelInfoLayerHook::init(LevelInfoLayer* self, GJGameLevel* level)
 {
 	if(!matdash::orig<&LevelInfoLayerHook::init>(self, level)) return false;
 
 	auto winSize = CCDirector::sharedDirector()->getWinSize();
 	auto visSize = CCDirector::sharedDirector()->getVisibleSize();
 
-	auto pauseBtn = gd::CCMenuItemSpriteExtra::create(CCSprite::createWithSpriteFrameName("GJ_optionsBtn_001.png"), self, (SEL_MenuHandler)(&LevelInfoLayerHook::onMoreOptionsLayerButtonPressed));
+	auto pauseBtn = CCMenuItemSpriteExtra::create(CCSprite::createWithSpriteFrameName("GJ_optionsBtn_001.png"), self, (SEL_MenuHandler)(&LevelInfoLayerHook::onMoreOptionsLayerButtonPressed));
 	pauseBtn->setScale(0.85f);
 	pauseBtn->m_fBaseScale = 0.85f;
 	
@@ -30,7 +30,7 @@ bool LevelInfoLayerHook::init(gd::LevelInfoLayer* self, gd::GJGameLevel* level)
 		if(auto s = dynamic_cast<CCSprite*>(o)) 
 		{
 			
-			auto tname = getTextureName(s);
+			auto tname = ModToolbox::getTextureName(s);
 			std::cout << i << ' ' << tname << std::endl;
 			
 			int num = 0;
@@ -56,7 +56,7 @@ bool LevelInfoLayerHook::init(gd::LevelInfoLayer* self, gd::GJGameLevel* level)
 
 				auto newspr = CCSprite::createWithSpriteFrameName(tname);
 				newspr->setScale(s->getScale());
-				auto btn = gd::CCMenuItemSpriteExtra::create(newspr, self, menu_selector(LevelInfoLayerHook::onLevelBadgeInfo));
+				auto btn = CCMenuItemSpriteExtra::create(newspr, self, menu_selector(LevelInfoLayerHook::onLevelBadgeInfo));
 				btn->setTag(num);
 				btn->setPosition(untouchedPosition);
 
@@ -70,7 +70,7 @@ bool LevelInfoLayerHook::init(gd::LevelInfoLayer* self, gd::GJGameLevel* level)
 
 void LevelInfoLayerHook::onMoreOptionsLayerButtonPressed(cocos2d::CCObject* pSender)
 {
-	gd::MoreOptionsLayer::create()->show();
+	MoreOptionsLayer::create()->show();
 }
 
 void LevelInfoLayerHook::onLevelBadgeInfo(cocos2d::CCObject* pSender)
@@ -96,7 +96,7 @@ void LevelInfoLayerHook::onLevelBadgeInfo(cocos2d::CCObject* pSender)
 }
 	
 
-void LevelInfoLayerHook::updateLabelValues(gd::LevelInfoLayer* self)
+void LevelInfoLayerHook::updateLabelValues(LevelInfoLayer* self)
 {
 	matdash::orig<&LevelInfoLayerHook::updateLabelValues>(self);
 
@@ -124,9 +124,9 @@ void LevelInfoLayerHook::updateLabelValues(gd::LevelInfoLayer* self)
 
 void LevelInfoLayerHook::LoadHooks()
 {
-	matdash::add_hook<&LevelInfoLayerHook::init>(gd::base + 0x175DF0);
+	matdash::add_hook<&LevelInfoLayerHook::init>(base + 0x175DF0);
 	std::cout << "Hooked LevelInfoLayer::init" << std::endl;
 
-	matdash::add_hook<&LevelInfoLayerHook::updateLabelValues>(gd::base + 0x17B170);
+	matdash::add_hook<&LevelInfoLayerHook::updateLabelValues>(base + 0x17B170);
 	std::cout << "Hooked LevelInfoLayer::updateLabelValues" << std::endl;
 }

@@ -1,10 +1,15 @@
 #pragma once
 #include "includes.h"
 
-class MenuLayerHook : public gd::MenuLayer
+class MenuLayerHook : public MenuLayer
 {
 public:
-	static bool init(gd::MenuLayer* self);
+
+SimplePlayer* m_pProfileIconSprite;
+
+public:
+	bool init_();
 	static void LoadHooks();
 	void onPlayerInfo(cocos2d::CCObject* pSender);
+	void replaceAccountButton();
 };

@@ -2,10 +2,10 @@
 
 #include "includes.h"
 
-class OptionsLayerHook : public gd::OptionsLayer
+class OptionsLayerHook : public OptionsLayer
 {
 public:
-	static void customSetup(gd::OptionsLayer* self);
+	static void customSetup(OptionsLayer* self);
 	static void musicSliderChanged(cocos2d::CCObject* pSender);
 	static void LoadHooks();
 	void onCredits(cocos2d::CCObject*);

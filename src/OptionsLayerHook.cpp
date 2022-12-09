@@ -1,7 +1,7 @@
 #include "OptionsLayerHook.hpp"
 #include "CreditsLayer.hpp"
 
-void OptionsLayerHook::customSetup(gd::OptionsLayer* self)
+void OptionsLayerHook::customSetup(OptionsLayer* self)
 {
 	matdash::orig<&OptionsLayerHook::customSetup>(self);
 
@@ -9,8 +9,8 @@ void OptionsLayerHook::customSetup(gd::OptionsLayer* self)
 	auto layer = self->m_pLayer;
 	unsigned int nodeCount = layer->getChildrenCount();
 
-	auto creditsSpr = gd::ButtonSprite::create("Credits", 70, false, "goldFont.fnt", "GJ_button_01.png", 30, 1);
-	auto creditsBtn = gd::CCMenuItemSpriteExtra::create(creditsSpr, self, (cocos2d::SEL_MenuHandler)&OptionsLayerHook::onCredits);
+	auto creditsSpr = ButtonSprite::create("Credits", 70, false, "goldFont.fnt", "GJ_button_01.png", 30, 1);
+	auto creditsBtn = CCMenuItemSpriteExtra::create(creditsSpr, self, (cocos2d::SEL_MenuHandler)&OptionsLayerHook::onCredits);
 	creditsBtn->setPositionY(80);
 
 	for (unsigned int i = 0; i < nodeCount; i++)
@@ -21,15 +21,15 @@ void OptionsLayerHook::customSetup(gd::OptionsLayer* self)
 		{
 			if(menu->getChildrenCount() > 1)
 			{
-				auto btn1 = reinterpret_cast<gd::CCMenuItemSpriteExtra*>(menu->getChildren()->objectAtIndex(0));
-				auto btn2 = reinterpret_cast<gd::CCMenuItemSpriteExtra*>(menu->getChildren()->objectAtIndex(1));
-				auto btn3 = reinterpret_cast<gd::CCMenuItemSpriteExtra*>(menu->getChildren()->objectAtIndex(2));
-				auto btn4 = reinterpret_cast<gd::CCMenuItemSpriteExtra*>(menu->getChildren()->objectAtIndex(3));
+				auto btn1 = reinterpret_cast<CCMenuItemSpriteExtra*>(menu->getChildren()->objectAtIndex(0));
+				auto btn2 = reinterpret_cast<CCMenuItemSpriteExtra*>(menu->getChildren()->objectAtIndex(1));
+				auto btn3 = reinterpret_cast<CCMenuItemSpriteExtra*>(menu->getChildren()->objectAtIndex(2));
+				auto btn4 = reinterpret_cast<CCMenuItemSpriteExtra*>(menu->getChildren()->objectAtIndex(3));
 				
-				auto btn1spr = reinterpret_cast<gd::ButtonSprite*>(btn1->getChildren()->objectAtIndex(0));
-				auto btn2spr = reinterpret_cast<gd::ButtonSprite*>(btn2->getChildren()->objectAtIndex(0));
-				auto btn3spr = reinterpret_cast<gd::ButtonSprite*>(btn3->getChildren()->objectAtIndex(0));
-				auto btn4spr = reinterpret_cast<gd::ButtonSprite*>(btn4->getChildren()->objectAtIndex(0));
+				auto btn1spr = reinterpret_cast<ButtonSprite*>(btn1->getChildren()->objectAtIndex(0));
+				auto btn2spr = reinterpret_cast<ButtonSprite*>(btn2->getChildren()->objectAtIndex(0));
+				auto btn3spr = reinterpret_cast<ButtonSprite*>(btn3->getChildren()->objectAtIndex(0));
+				auto btn4spr = reinterpret_cast<ButtonSprite*>(btn4->getChildren()->objectAtIndex(0));
 
 				btn1->setPosition({-107, 80});
 				btn1->setContentSize({94, 30});
@@ -66,9 +66,9 @@ void OptionsLayerHook::musicSliderChanged(cocos2d::CCObject *a1)
 
 void OptionsLayerHook::LoadHooks()
 {
-	matdash::add_hook<&OptionsLayerHook::customSetup>(gd::base + 0x1DD420);
+	matdash::add_hook<&OptionsLayerHook::customSetup>(base + 0x1DD420);
 	std::cout << "Hooked OptionsLayer::customSetup" << std::endl;
 
-	matdash::add_hook<&OptionsLayerHook::musicSliderChanged>(gd::base + 0x1DDE20);
+	matdash::add_hook<&OptionsLayerHook::musicSliderChanged>(base + 0x1DDE20);
 	std::cout << "Hooked OptionsLayer::musicSliderChanged" << std::endl;
 }

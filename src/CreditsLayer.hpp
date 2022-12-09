@@ -2,7 +2,7 @@
 
 #include "includes.h"
 
-class CreditsLayer : public gd::FLAlertLayer
+class CreditsLayer : public FLAlertLayer
 {
 protected:
 	void onIconClicked(cocos2d::CCObject* pSender);

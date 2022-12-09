@@ -11,13 +11,13 @@
 #include <matdash/boilerplate.hpp>
 
 // Release
-//#define DEBUG
+#define DEBUG
 
 #ifdef DEBUG
 	#include <matdash/console.hpp>
 #endif
 
-matdash::cc::thiscall<void> LoadingLayer_loadAssets(gd::LoadingLayer* self)
+matdash::cc::thiscall<void> LoadingLayer_loadAssets(LoadingLayer* self)
 {
   matdash::orig<&LoadingLayer_loadAssets>(self);
 
@@ -44,7 +44,7 @@ void mod_main(HMODULE)
 
 	// Hooks
 	
-	matdash::add_hook<&LoadingLayer_loadAssets>(gd::base + 0x18C8E0);
+	matdash::add_hook<&LoadingLayer_loadAssets>(base + 0x18C8E0);
 	std::cout << "Hooked LoadingLayer::loadAssets" << std::endl;
 
 	LevelInfoLayerHook::LoadHooks();

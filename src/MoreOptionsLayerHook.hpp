@@ -2,9 +2,9 @@
 
 #include "includes.h"
 
-class MoreOptionsLayerHook : public gd::MoreOptionsLayer
+class MoreOptionsLayerHook : public MoreOptionsLayer
 {
 public:
-	static bool init(gd::MoreOptionsLayer* self);
+	static bool init(MoreOptionsLayer* self);
 	static void LoadHooks();
 };

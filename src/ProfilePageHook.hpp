@@ -2,10 +2,10 @@
 
 #include "includes.h"
 
-class ProfilePageHook : gd::ProfilePage
+class ProfilePageHook : ProfilePage
 {
 public:
-	static void loadPageWithUserInfo(gd::ProfilePage* self, gd::GJUserScore *score);
+	static void loadPageWithUserInfo(ProfilePage* self, GJUserScore *score);
 	static void LoadHooks();
 	void onModeratorBadgeInfo(cocos2d::CCObject* pSender);
 };

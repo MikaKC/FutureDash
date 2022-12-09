@@ -1,6 +1,6 @@
 #include "ProfilePageHook.hpp"
 
-void ProfilePageHook::loadPageWithUserInfo(gd::ProfilePage *self, gd::GJUserScore *score)
+void ProfilePageHook::loadPageWithUserInfo(ProfilePage *self, GJUserScore *score)
 {
 	matdash::orig<&ProfilePageHook::loadPageWithUserInfo>(self, score);
 
@@ -16,7 +16,7 @@ void ProfilePageHook::loadPageWithUserInfo(gd::ProfilePage *self, gd::GJUserScor
 		if(auto s = dynamic_cast<CCSprite*>(o)) 
 		{
 			
-			auto tname = getTextureName(s);
+			auto tname = ModToolbox::getTextureName(s);
 			std::cout << i << ' ' << tname << std::endl;
 			
 			int num = 0;
@@ -27,7 +27,7 @@ void ProfilePageHook::loadPageWithUserInfo(gd::ProfilePage *self, gd::GJUserScor
 			{
 				auto newspr = CCSprite::createWithSpriteFrameName(tname);
 				newspr->setScale(s->getScale());
-				auto btn = gd::CCMenuItemSpriteExtra::create(newspr, self, menu_selector(ProfilePageHook::onModeratorBadgeInfo));
+				auto btn = CCMenuItemSpriteExtra::create(newspr, self, menu_selector(ProfilePageHook::onModeratorBadgeInfo));
 				btn->setTag(num);
 				btn->setPosition(s->getPosition());
 				menu->addChild(btn);
@@ -53,6 +53,6 @@ void ProfilePageHook::onModeratorBadgeInfo(cocos2d::CCObject* pSender)
 	
 void ProfilePageHook::LoadHooks()
 {
-	matdash::add_hook<&ProfilePageHook::loadPageWithUserInfo>(gd::base + 0x210040);
+	matdash::add_hook<&ProfilePageHook::loadPageWithUserInfo>(base + 0x210040);
 	std::cout << "Hooked ProfilePage::loadWithUserInfo" << std::endl;
 }

@@ -9,6 +9,9 @@
 #include <matdash/minhook.hpp>
 #include "utils.hpp"
 
-using std::uintptr_t;
-
 using namespace cocos2d;
+using namespace gd;
+
+#include "ModToolbox.hpp"
+
+using std::uintptr_t;

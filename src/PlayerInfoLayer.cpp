@@ -1,9 +1,9 @@
 #include "PlayerInfoLayer.hpp"
 
-PlayerInfoLayer* PlayerInfoLayer::create()
+PlayerInfoLayer* PlayerInfoLayer::create(MenuLayerHook* menulayer)
 {
 	auto ptr = new (std::nothrow) PlayerInfoLayer;
-	if(ptr && ptr->init(250, 150, "Quick info"))
+	if(ptr && ptr->init(250, 150, "Quick info", menulayer))
 	{
 	ptr->autorelease();
 	return ptr;
@@ -17,17 +17,18 @@ void PlayerInfoLayer::setup()
 	auto winSize = CCDirector::sharedDirector()->getWinSize();
 	auto visibleSize = CCDirector::sharedDirector()->getVisibleSize();
 
-	auto accountManager = gd::GJAccountManager::sharedState();
-	auto gameStats = gd::GameStatsManager::sharedState();
+	auto accountManager = GJAccountManager::sharedState();
+	auto gameStats = GameStatsManager::sharedState();
 	
-	this->simplePlayerSprite = gd::SimplePlayer::create(gd::GameManager::sharedState()->getPlayerFrame());
+	this->simplePlayerSprite = SimplePlayer::create(0);
+	this->simplePlayerSprite->updatePlayerFrame(m_iCheckID, m_pCheckType);
 	this->simplePlayerSprite->setPosition({m_pLrSize.width / 2 - 60, 0});
-	this->simplePlayerSprite->setColor(gd::GameManager::sharedState()->colorForIdx(gd::GameManager::sharedState()->getPlayerColor()));
-	this->simplePlayerSprite->setSecondColor(gd::GameManager::sharedState()->colorForIdx(gd::GameManager::sharedState()->getPlayerColor2()));
-	this->simplePlayerSprite->setGlowOutline(gd::GameManager::sharedState()->getPlayerGlow());
+	this->simplePlayerSprite->setColor(GM->colorForIdx(GM->getPlayerColor()));
+	this->simplePlayerSprite->setSecondColor(GM->colorForIdx(GM->getPlayerColor2()));
+	this->simplePlayerSprite->setGlowOutline(GM->getPlayerGlow());
 
 
-	// auto simplePlayerBtn = gd::CCMenuItemSpriteExtra::create((CCSprite*)simplePlayerSprite, this, menu_selector(Callbacks::onPlayerIconPressed));
+	// auto simplePlayerBtn = CCMenuItemSpriteExtra::create((CCSprite*)simplePlayerSprite, this, menu_selector(Callbacks::onPlayerIconPressed));
 	
 	auto playerBG = CCSprite::create("square02_001.png");
 	playerBG->setPosition(this->simplePlayerSprite->getPosition());
@@ -37,24 +38,26 @@ void PlayerInfoLayer::setup()
 	playerBG->setOpacity(105);
 
 	// Check player ID's (just for some like filler stuff)
-	auto buttonSprite = gd::ButtonSprite::create("More info", 0, false, "bigFont.fnt", "GJ_button_01.png", 0, 0.5f);
-	auto buttonSpriteBtn = gd::CCMenuItemSpriteExtra::create(buttonSprite, this, menu_selector(PlayerInfoLayer::onMoreInfoPressed));
+	auto buttonSprite = ButtonSprite::create("More info", 0, false, "bigFont.fnt", "GJ_button_01.png", 0, 0.5f);
+	auto buttonSpriteBtn = CCMenuItemSpriteExtra::create(buttonSprite, this, menu_selector(PlayerInfoLayer::onMoreInfoPressed));
 	buttonSpriteBtn->setPositionY(-m_pLrSize.height / 2 + 10);
 
-	auto textArea = gd::TextArea::create("chatFont.fnt", false, std::string("<cg>Name</c>: " + accountManager->m_sUsername + "\n<cp>Stars</c>: " + std::to_string(gameStats->m_pPlayerStats->valueForKey("6")->intValue()) + "\n<cy>Gold</c> coins: " + std::to_string(gameStats->m_pPlayerStats->valueForKey("8")->intValue()) + "\n<cl>Silver</c> coins: " + std::to_string(gameStats->m_pPlayerStats->valueForKey("12")->intValue()) + "\n<cr>Demons</c>: " + std::to_string(gameStats->m_pPlayerStats->valueForKey("5")->intValue())), .75f, 100, 10, {0.5f, 0.5f});
+	auto textArea = TextArea::create("chatFont.fnt", false, std::string("<cg>Name</c>: " + accountManager->m_sUsername + "\n<cp>Stars</c>: " + std::to_string(gameStats->m_pPlayerStats->valueForKey("6")->intValue()) + "\n<cy>Gold</c> coins: " + std::to_string(gameStats->m_pPlayerStats->valueForKey("8")->intValue()) + "\n<cl>Silver</c> coins: " + std::to_string(gameStats->m_pPlayerStats->valueForKey("12")->intValue()) + "\n<cr>Demons</c>: " + std::to_string(gameStats->m_pPlayerStats->valueForKey("5")->intValue())), .75f, 100, 10, {0.5f, 0.5f});
 	textArea->setPosition({-20, 0});
 
 	// Need to make a new variable because
 	auto leftArrowSpr = CCSprite::createWithSpriteFrameName("navArrowBtn_001.png");
 	leftArrowSpr->setFlipX(true);
 
-	auto leftArrow = gd::CCMenuItemSpriteExtra::create(leftArrowSpr, this, menu_selector(PlayerInfoLayer::onArrowLeftPressed));
+	auto leftArrow = CCMenuItemSpriteExtra::create(leftArrowSpr, this, menu_selector(PlayerInfoLayer::onNextIcon));
+	leftArrow->setTag(-1);
 	leftArrow->setScale(0.5f);
 	leftArrow->m_fBaseScale = 0.5f;
 	leftArrow->m_fScaleMultiplier = 1.25f;
 	leftArrow->setPosition({30, 0});
 
-	auto rightArrow = gd::CCMenuItemSpriteExtra::create(CCSprite::createWithSpriteFrameName("navArrowBtn_001.png"), this, menu_selector(PlayerInfoLayer::onArrowRightPressed));
+	auto rightArrow = CCMenuItemSpriteExtra::create(CCSprite::createWithSpriteFrameName("navArrowBtn_001.png"), this, menu_selector(PlayerInfoLayer::onNextIcon));
+	rightArrow->setTag(1);
 	rightArrow->setScale(0.5f);
 	rightArrow->m_fBaseScale = 0.5f;
 	rightArrow->m_fScaleMultiplier = 1.25f;
@@ -71,13 +74,13 @@ void PlayerInfoLayer::setup()
 
 void PlayerInfoLayer::onMoreInfoPressed(cocos2d::CCObject* pSender)
 {
-	std::string playerCube = this->iconStringFromName("Cube", "r", gd::GameManager::sharedState()->getPlayerFrame(), false);
-	std::string playerShip = this->iconStringFromName("Ship", "o", gd::GameManager::sharedState()->getPlayerShip());
-	std::string playerBall = this->iconStringFromName("Ball", "y", gd::GameManager::sharedState()->getPlayerBall());
-	std::string playerUFO = this->iconStringFromName("UFO", "g", gd::GameManager::sharedState()->getPlayerBird());
-	std::string playerWave = this->iconStringFromName("Wave", "b", gd::GameManager::sharedState()->getPlayerDart());
-	std::string playerRobot = this->iconStringFromName("Robot", "l", gd::GameManager::sharedState()->getPlayerRobot());
-	std::string playerSpider = this->iconStringFromName("Spider", "p", gd::GameManager::sharedState()->getPlayerSpider());
+	std::string playerCube = this->iconStringFromName("Cube", "r", GM->getPlayerFrame(), false);
+	std::string playerShip = this->iconStringFromName("Ship", "o", GM->getPlayerShip());
+	std::string playerBall = this->iconStringFromName("Ball", "y", GM->getPlayerBall());
+	std::string playerUFO = this->iconStringFromName("UFO", "g", GM->getPlayerBird());
+	std::string playerWave = this->iconStringFromName("Wave", "b", GM->getPlayerDart());
+	std::string playerRobot = this->iconStringFromName("Robot", "l", GM->getPlayerRobot());
+	std::string playerSpider = this->iconStringFromName("Spider", "p", GM->getPlayerSpider());
 
 	const std::string str = std::format("{}{}{}{}{}{}{}", playerCube, playerShip, playerBall, playerUFO, playerWave, playerRobot, playerSpider);
 	
@@ -99,15 +102,16 @@ void PlayerInfoLayer::show()
 	m_pLayer->runAction(action);
 }
 
-bool PlayerInfoLayer::init(float _w, float _h, std::string title)
+bool PlayerInfoLayer::init(float _w, float _h, std::string title, MenuLayerHook* menulayer)
 {
-	auto winSize = cocos2d::CCDirector::sharedDirector()->getWinSize();
 	m_pLrSize = cocos2d::CCSize { _w, _h };
+	this->m_pMenuLayer = menulayer;
 
 	if (!this->initWithColor({ 0, 0, 0, 75 })) return false;
 	this->m_pLayer = cocos2d::CCLayer::create();
 	this->addChild(this->m_pLayer);
 
+	auto winSize = cocos2d::CCDirector::sharedDirector()->getWinSize();
 	auto bg = cocos2d::extension::CCScale9Sprite::create("GJ_square01.png", { 0.0f, 0.0f, 80.0f, 80.0f });
 	bg->setContentSize(m_pLrSize);
 	bg->setPosition(winSize.width / 2, winSize.height / 2);
@@ -115,13 +119,17 @@ bool PlayerInfoLayer::init(float _w, float _h, std::string title)
 
 	this->m_pButtonMenu = cocos2d::CCMenu::create();
 	this->m_pLayer->addChild(this->m_pButtonMenu);
-
+	
+	
+	this->m_iCurrentIcon = static_cast<int>(GM->getPlayerIconType());
+	this->m_pCheckType = GM->getPlayerIconType();
+	this->m_iCheckID = ModToolbox::frameForIcon(GM->getPlayerIconType());
 	this->setup();
 
 	auto closeSpr = cocos2d::CCSprite::createWithSpriteFrameName("GJ_closeBtn_001.png");
 	closeSpr->setScale(.8f);
 
-	auto closeBtn = gd::CCMenuItemSpriteExtra::create(
+	auto closeBtn = CCMenuItemSpriteExtra::create(
 	closeSpr,
 	this,
 	(cocos2d::SEL_MenuHandler)&PlayerInfoLayer::onClose
@@ -144,78 +152,48 @@ void PlayerInfoLayer::updateCheckIcon(CCObject* pSender)
 	simplePlayerSprite->updatePlayerFrame(m_iCheckID, m_pCheckType);
 }
 
-void PlayerInfoLayer::animateAndChangeIcon(int id, float desiredScale, gd::IconType iconType)
+void PlayerInfoLayer::animateAndChangeIcon(int id, float desiredScale, IconType iconType)
 {
 	m_iCheckID = id;
 	m_pCheckType = iconType;
+	GM->setPlayerIconType(m_pCheckType);
 
 	float transitionTime = 0.3f;
 
 	simplePlayerSprite->runAction(
-	CCSequence::create(
-	CCEaseInOut::create(CCScaleTo::create(transitionTime, 0, 0), 2.f),
-	CCCallFuncO::create(this, callfuncO_selector(PlayerInfoLayer::updateCheckIcon), this),
-	CCEaseInOut::create(CCScaleTo::create(transitionTime, desiredScale, desiredScale), 2.f),
-	nullptr
-	)
+		CCSequence::create(
+			CCEaseInOut::create(CCScaleTo::create(transitionTime, 0, 0), 2.f),
+			CCCallFuncO::create(this, callfuncO_selector(PlayerInfoLayer::updateCheckIcon), this),
+			CCEaseInOut::create(CCScaleTo::create(transitionTime, desiredScale, desiredScale), 2.f),
+			nullptr
+		)
 	);
 }
 
-void PlayerInfoLayer::onArrowLeftPressed(cocos2d::CCObject* pSender)
+void PlayerInfoLayer::onNextIcon(cocos2d::CCObject* pSender)
 {
-	this->m_iCurrentIcon--;
-
-	if(this->m_iCurrentIcon < 0) {
-	this->m_iCurrentIcon = 6;
-	}
+	if(pSender->getTag() > 0)
+		m_iCurrentIcon = m_iCurrentIcon >= 6 ? 0 : m_iCurrentIcon + 1; //right
+	else
+		m_iCurrentIcon = m_iCurrentIcon <= 0 ? 6 : m_iCurrentIcon - 1; //left
 	
 	this->checkAndAnimate();
 }
 
-void PlayerInfoLayer::onArrowRightPressed(cocos2d::CCObject* pSender)
-{
-	this->m_iCurrentIcon++;
-
-	if(this->m_iCurrentIcon > 6) {
-	this->m_iCurrentIcon = 0;
-	}
-
-	this->checkAndAnimate();
-}
-
-// You can also kill me for this
+// here u go 👍
 void PlayerInfoLayer::checkAndAnimate()
 {
-	switch(this->m_iCurrentIcon)
-	{
-	case 0:
-	this->animateAndChangeIcon(gd::GameManager::sharedState()->getPlayerFrame(), 1.f, gd::IconType::kIconTypeCube);
-	break;
-	case 1:
-	this->animateAndChangeIcon(gd::GameManager::sharedState()->getPlayerShip(), 0.75f, gd::IconType::kIconTypeShip);
-	break;
-	case 2:
-	this->animateAndChangeIcon(gd::GameManager::sharedState()->getPlayerBall(), 1.f, gd::IconType::kIconTypeBall);
-	break;
-	case 3:
-	this->animateAndChangeIcon(gd::GameManager::sharedState()->getPlayerBird(), 1.f, gd::IconType::kIconTypeUfo);
-	break;
-	case 4:
-	this->animateAndChangeIcon(gd::GameManager::sharedState()->getPlayerDart(), 1.f, gd::IconType::kIconTypeWave);
-	break;
-	case 5:
-	this->animateAndChangeIcon(gd::GameManager::sharedState()->getPlayerRobot(), 1.f, gd::IconType::kIconTypeRobot);
-	break;
-	case 6:
-	this->animateAndChangeIcon(gd::GameManager::sharedState()->getPlayerSpider(), 1.f, gd::IconType::kIconTypeSpider);
-	break;
-	}
+	float scale = this->m_iCurrentIcon == 1 ? 0.75f : 1.f;
+	auto icon = static_cast<IconType>(this->m_iCurrentIcon);
+	
+	this->animateAndChangeIcon(ModToolbox::frameForIcon(icon), scale, icon);
 }
 
 void PlayerInfoLayer::onClose(cocos2d::CCObject *self)
 {
 	this->setKeyboardEnabled(false);
 	this->removeFromParentAndCleanup(true);
+	this->m_pMenuLayer->m_pProfileIconSprite->updatePlayerFrame(m_iCheckID, m_pCheckType);
 }
 
 

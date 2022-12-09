@@ -1,31 +1,32 @@
 #pragma once
 
 #include "includes.h"
+#include "MenuLayerHook.hpp"
 
-class PlayerInfoLayer : public gd::FLAlertLayer
+class PlayerInfoLayer : public FLAlertLayer
 {
 protected:
 	int m_iCurrentIcon = 0;
-	gd::SimplePlayer* simplePlayerSprite;
+	SimplePlayer* simplePlayerSprite;
+	MenuLayerHook* m_pMenuLayer;
 
 	int m_iCheckID = 0;
-	gd::IconType m_pCheckType = gd::IconType::kIconTypeCube;
+	IconType m_pCheckType = IconType::kIconTypeCube;
 	CCSize m_pLrSize;
 
 public:
-	bool init(float _w, float _h, std::string title);
+	bool init(float _w, float _h, std::string title, MenuLayerHook* menulayer);
 	void show() override;
 	void setup();
 
-	void onArrowLeftPressed(cocos2d::CCObject* pSender);
-	void onArrowRightPressed(cocos2d::CCObject* pSender);
+	void onNextIcon(cocos2d::CCObject* pSender);
 	void updateCheckIcon(cocos2d::CCObject* pSender);
 	void onClose(cocos2d::CCObject* pSender);
 	
 	void checkAndAnimate();
-	void animateAndChangeIcon(int id, float desiredScale, gd::IconType iconType);
+	void animateAndChangeIcon(int id, float desiredScale, IconType iconType);
 
-	static PlayerInfoLayer* create();
+	static PlayerInfoLayer* create(MenuLayerHook* menulayer);
 	
 	void onMoreInfoPressed(cocos2d::CCObject* pSender);
 	inline std::string iconStringFromName(std::string const &icon, std::string const &colour, int const &id, bool const &addNewLine = true);
