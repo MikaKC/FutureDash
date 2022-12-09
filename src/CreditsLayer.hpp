@@ -1,15 +1,18 @@
 #pragma once
 
 #include "includes.h"
-#include "BrownAlertLayer.hpp"
 
-class CreditsLayer : public BrownAlertLayer
+class CreditsLayer : public gd::FLAlertLayer
 {
 protected:
     void onIconClicked(cocos2d::CCObject* pSender);
+    cocos2d::CCSize m_pLrSize;
 
 public:
-    void setup() override;
+    bool init(float _w, float _h, std::string title);
+    void setup();
+
+    void onClose(cocos2d::CCObject *pSnder);
 
     static CreditsLayer* create();
 };

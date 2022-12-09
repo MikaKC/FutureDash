@@ -1,8 +1,13 @@
 #pragma once
 
-#include "includes.h"
-#include "InfoLayer.hpp"
-#include "CreditsLayer.hpp"
+#include <Windows.h>
+#include <gd.h>
+#include <format>
+#include <iostream>
+
+// im pissed off over this shit
+// #include "PlayerInfoLayer.hpp"
+// #include "CreditsLayer.hpp"
 
 class Callbacks
 {
@@ -21,8 +26,7 @@ public:
 
     void onInfoButtonPressed(cocos2d::CCObject* pSender)
     {
-        auto* layer = InfoLayer::create();
-        layer->show();
+        //PlayerInfoLayer::create()->show();
     }
 
     void onMoreInfoPressed(cocos2d::CCObject* pSender)
@@ -55,17 +59,16 @@ public:
 
     void onCreditsButtonPressed(cocos2d::CCObject* pSender)
     {
-        CreditsLayer::create()->show();
+        //CreditsLayer::create()->show();
     }
-    
 
     void hidePauseLayerUI(cocos2d::CCNode* pSender)
     {
-       // ALERT("Error", "OK", nullptr, "This feature is not available yet!");
 	   gd::PauseLayer* self = static_cast<gd::PauseLayer*>(pSender->getUserObject());
 	   self->setVisible(false);
     }
 
+    // Since hj's headers don't have this func, we add it ourselves
     gd::FLAlertLayer* createInfoLayer(gd::GJGameLevel* level)
 	{
         return reinterpret_cast<gd::FLAlertLayer*(__fastcall*)(gd::GJGameLevel*, gd::GJUserScore*)>(
@@ -73,9 +76,9 @@ public:
         )(level, nullptr);
 	}
 
-    void onPauseLayerInfoPressed(cocos2d::CCNode* pSender)
+    void onPauseLayerInfoPressed(cocos2d::CCObject* pSender)
     {
-		createInfoLayer(gd::GameManager::sharedState()->getPlayLayer()->m_level)->show();
+        createInfoLayer(gd::PlayLayer::get()->m_level)->show();
     }
 
     void onLevelBadgeInfo(cocos2d::CCObject* pSender)

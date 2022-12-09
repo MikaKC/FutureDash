@@ -3,7 +3,7 @@
 CreditsLayer* CreditsLayer::create()
 {
     auto ptr = new (std::nothrow) CreditsLayer;
-    if(ptr && ptr->init(300, 150, "GJ_square01.png", "Credits"))
+    if(ptr && ptr->init(300, 150, "Credits"))
     {
         ptr->autorelease();
         return ptr;
@@ -93,6 +93,45 @@ void CreditsLayer::setup()
     m_pLayer->addChild(menu);
 }
 
+bool CreditsLayer::init(float _w, float _h, std::string title)
+{
+    auto winSize = cocos2d::CCDirector::sharedDirector()->getWinSize();
+    m_pLrSize = cocos2d::CCSize { _w, _h };
+
+    if (!this->initWithColor({ 0, 0, 0, 75 })) return false;
+    this->m_pLayer = cocos2d::CCLayer::create();
+    this->addChild(this->m_pLayer);
+
+    auto bg = cocos2d::extension::CCScale9Sprite::create("GJ_square01.png", { 0.0f, 0.0f, 80.0f, 80.0f });
+    bg->setContentSize(m_pLrSize);
+    bg->setPosition(winSize.width / 2, winSize.height / 2);
+    this->m_pLayer->addChild(bg);
+
+    this->m_pButtonMenu = cocos2d::CCMenu::create();
+    this->m_pLayer->addChild(this->m_pButtonMenu);
+
+    this->setup();
+
+    auto closeSpr = cocos2d::CCSprite::createWithSpriteFrameName("GJ_closeBtn_001.png");
+    closeSpr->setScale(.8f);
+
+    auto closeBtn = gd::CCMenuItemSpriteExtra::create(
+        closeSpr,
+        this,
+        (cocos2d::SEL_MenuHandler)&CreditsLayer::onClose
+    );
+    closeBtn->setUserData(reinterpret_cast<void*>(this));
+
+    this->m_pButtonMenu->addChild(closeBtn);
+
+    closeBtn->setPosition( - _w / 2, _h / 2 );
+
+    this->setKeypadEnabled(true);
+    this->setTouchEnabled(true);
+
+    return true;
+}
+
 // This shit doesn't work
 void CreditsLayer::onIconClicked(cocos2d::CCObject* pSender)
 {
@@ -110,4 +149,10 @@ void CreditsLayer::onIconClicked(cocos2d::CCObject* pSender)
             gd::ProfilePage::create(2878941, false)->show();
 		break;
 	}
+}
+
+void CreditsLayer::onClose(cocos2d::CCObject *self)
+{
+    this->setKeyboardEnabled(false);
+    this->removeFromParentAndCleanup(true);
 }
