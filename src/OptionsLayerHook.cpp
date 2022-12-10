@@ -58,10 +58,17 @@ void OptionsLayerHook::onCredits(cocos2d::CCObject* pSender)
 	CreditsLayer::create()->show();
 }
 
-// I guess its ccobject but i might be wrong
-void OptionsLayerHook::musicSliderChanged(cocos2d::CCObject *a1)
+void PauseLayer_musicSliderChanged(int *a1)
 {
-	matdash::orig<&OptionsLayerHook::musicSliderChanged>(a1);
+	reinterpret_cast<void(__thiscall*)(int*)>(
+		base + 0x1E5CE0
+	)(a1);
+}
+
+// I guess its ccobject but i might be wrong
+void OptionsLayerHook::musicSliderChanged(int *this_)
+{
+	PauseLayer_musicSliderChanged(this_);
 }
 
 void OptionsLayerHook::LoadHooks()

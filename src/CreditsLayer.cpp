@@ -117,6 +117,18 @@ bool CreditsLayer::init(float _w, float _h, std::string title)
 	this->m_pButtonMenu = cocos2d::CCMenu::create();
 	this->m_pLayer->addChild(this->m_pButtonMenu);
 
+	if (sizeof(title) > 0) {
+		auto labelTitle = CCLabelBMFont::create(title.c_str(), "goldFont.fnt");
+
+		labelTitle->limitLabelWidth(this->m_pLrSize.width * 4, .75f, .2f);
+		labelTitle->setPosition(
+			winSize.width / 2,
+			winSize.height / 2 + this->m_pLrSize.height / 2 - 25
+		);
+
+		this->m_pLayer->addChild(labelTitle);
+    }
+
 	this->setup();
 
 	auto closeSpr = cocos2d::CCSprite::createWithSpriteFrameName("GJ_closeBtn_001.png");
@@ -131,7 +143,7 @@ bool CreditsLayer::init(float _w, float _h, std::string title)
 
 	this->m_pButtonMenu->addChild(closeBtn);
 
-	closeBtn->setPosition( - _w / 2, _h / 2 );
+	closeBtn->setPosition( - _w / 2 + 10, _h / 2 - 10);
 
 
 	return true;

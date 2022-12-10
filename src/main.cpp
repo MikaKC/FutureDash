@@ -10,8 +10,7 @@
 
 #include <matdash/boilerplate.hpp>
 
-// Release
-#define DEBUG
+//0#define DEBUG
 
 #ifdef DEBUG
 	#include <matdash/console.hpp>

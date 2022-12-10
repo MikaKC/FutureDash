@@ -75,6 +75,7 @@ struct AbbreviatedLabels{
 			this->autorelease();
 		}
 	};
+	
 	struct Callbacks 
 	{
 		void onLabel(CCNode* sender)

@@ -5,8 +5,8 @@ bool MenuLayerHook::init_()
 {
 	if (!matdash::orig<&MenuLayerHook::init_>(this)) return false;
 	
-	
-	this->replaceAccountButton();
+	// if that variable is disabled, then show the button
+	if(!GM->getGameVariable("2301")) this->replaceAccountButton();
 	
 	auto infoButton = CCMenuItemSpriteExtra::create(
 		CCSprite::createWithSpriteFrameName("GJ_infoIcon_001.png"),
