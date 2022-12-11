@@ -5,8 +5,8 @@ PlayerInfoLayer* PlayerInfoLayer::create(MenuLayerHook* menulayer)
 	auto ptr = new (std::nothrow) PlayerInfoLayer;
 	if(ptr && ptr->init(250, 150, "Quick info", menulayer))
 	{
-	ptr->autorelease();
-	return ptr;
+		ptr->autorelease();
+		return ptr;
 	}
 	CC_SAFE_DELETE(ptr);
 	return nullptr;
@@ -140,7 +140,7 @@ bool PlayerInfoLayer::init(float _w, float _h, std::string title, MenuLayerHook*
 	this->setup();
 
 	auto closeSpr = cocos2d::CCSprite::createWithSpriteFrameName("GJ_closeBtn_001.png");
-	closeSpr->setScale(.8f);
+	closeSpr->setScale(1.f);
 
 	auto closeBtn = CCMenuItemSpriteExtra::create(
 	closeSpr,
@@ -209,6 +209,10 @@ void PlayerInfoLayer::onClose(cocos2d::CCObject *self)
 	if(!GM->getGameVariable("2301")) this->m_pMenuLayer->m_pProfileIconSprite->updatePlayerFrame(m_iCheckID, m_pCheckType);
 }
 
+void PlayerInfoLayer::keyBackClicked()
+{
+	onClose(nullptr);
+}
 
 std::string PlayerInfoLayer::iconStringFromName(std::string const &icon, std::string const &colour, int const &id, bool const &addNewLine)
 {
@@ -219,5 +223,3 @@ std::string PlayerInfoLayer::iconStringFromName(std::string const &icon, std::st
 	
 	return std::format("{} ID: {}", iconText, std::to_string(id));
 }
-
-

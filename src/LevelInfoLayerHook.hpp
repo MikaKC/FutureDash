@@ -5,8 +5,8 @@
 class LevelInfoLayerHook : public LevelInfoLayer
 {
 public:
-	static bool init(LevelInfoLayer* self, GJGameLevel* level);
-	static void updateLabelValues(LevelInfoLayer* self);
+	bool initHook(GJGameLevel* level);
+	void updateLabelValuesHook();
 	static void LoadHooks();
 	void onLevelBadgeInfo(cocos2d::CCObject* pSender);
 	void onMoreOptionsLayerButtonPressed(cocos2d::CCObject* pSender);

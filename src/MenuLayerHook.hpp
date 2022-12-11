@@ -8,7 +8,7 @@ public:
 SimplePlayer* m_pProfileIconSprite;
 
 public:
-	bool init_();
+	bool initHook();
 	static void LoadHooks();
 	void onPlayerInfo(cocos2d::CCObject* pSender);
 	void replaceAccountButton();

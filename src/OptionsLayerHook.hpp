@@ -5,8 +5,10 @@
 class OptionsLayerHook : public OptionsLayer
 {
 public:
-	static void customSetup(OptionsLayer* self);
-	static void musicSliderChanged(int* this_);
+	void customSetupHook();
+	void musicSliderChangedHook();
+	void optionsButtonPressedHook(CCObject* pSender);
+
 	static void LoadHooks();
 	void onCredits(cocos2d::CCObject*);
 };

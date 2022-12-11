@@ -5,6 +5,6 @@
 class MoreOptionsLayerHook : public MoreOptionsLayer
 {
 public:
-	static bool init(MoreOptionsLayer* self);
+	bool initHook();
 	static void LoadHooks();
 };

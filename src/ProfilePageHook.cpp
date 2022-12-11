@@ -1,10 +1,10 @@
 #include "ProfilePageHook.hpp"
 
-void ProfilePageHook::loadPageWithUserInfo(ProfilePage *self, GJUserScore *score)
+void ProfilePageHook::loadPageWithUserInfoHook(GJUserScore *score)
 {
-	matdash::orig<&ProfilePageHook::loadPageWithUserInfo>(self, score);
+	matdash::orig<&ProfilePageHook::loadPageWithUserInfoHook>(this, score);
 
-	auto layer = reinterpret_cast<CCLayer*>(self->getChildren()->objectAtIndex(0));
+	auto layer = reinterpret_cast<CCLayer*>(this->getChildren()->objectAtIndex(0));
 	
 	auto menu = CCMenu::create();
 	menu->setPosition({0, 0});
@@ -27,7 +27,7 @@ void ProfilePageHook::loadPageWithUserInfo(ProfilePage *self, GJUserScore *score
 			{
 				auto newspr = CCSprite::createWithSpriteFrameName(tname);
 				newspr->setScale(s->getScale());
-				auto btn = CCMenuItemSpriteExtra::create(newspr, self, menu_selector(ProfilePageHook::onModeratorBadgeInfo));
+				auto btn = CCMenuItemSpriteExtra::create(newspr, this, menu_selector(ProfilePageHook::onModeratorBadgeInfo));
 				btn->setTag(num);
 				btn->setPosition(s->getPosition());
 				menu->addChild(btn);
@@ -38,21 +38,21 @@ void ProfilePageHook::loadPageWithUserInfo(ProfilePage *self, GJUserScore *score
 }
 
 void ProfilePageHook::onModeratorBadgeInfo(cocos2d::CCObject* pSender)
+{
+	switch(pSender->getTag())
 	{
-		switch(pSender->getTag())
-		{
-			// Moderator Badges
-			case 1:
-				ALERT("Badge", "OK", nullptr, "This user is a <cy>Moderator</c>, they can send levels to RobTop.");
-			break;
-			case 2:
-				ALERT("Badge", "OK", nullptr, "This user is an <cr>Elder Moderator</c>, they can send level to RobTop <cb>and</c> moderate chats.");
-			break;
-		}
+		// Moderator Badges
+		case 1:
+			ALERT("Badge", "OK", nullptr, "This user is a <cy>Moderator</c>, they can send levels to RobTop.");
+		break;
+		case 2:
+			ALERT("Badge", "OK", nullptr, "This user is an <cr>Elder Moderator</c>, they can send level to RobTop <cb>and</c> moderate chats.");
+		break;
 	}
+}
 	
 void ProfilePageHook::LoadHooks()
 {
-	matdash::add_hook<&ProfilePageHook::loadPageWithUserInfo>(base + 0x210040);
+	matdash::add_hook<&ProfilePageHook::loadPageWithUserInfoHook>(base + 0x210040);
 	std::cout << "Hooked ProfilePage::loadWithUserInfo" << std::endl;
 }

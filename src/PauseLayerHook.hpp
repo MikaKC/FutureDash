@@ -5,8 +5,8 @@
 class PauseLayerHook : public PauseLayer 
 {
 public:
-	static bool customSetup(PauseLayer *self);
-	static void onPracticeEnd(PauseLayer *self, cocos2d::CCObject *pSender);
+	bool customSetupHook();
+	void onPracticeEndHook(cocos2d::CCObject *pSender);
 	static void LoadHooks();
 	
 	static FLAlertLayer* createInfoLayer(GJGameLevel* level);

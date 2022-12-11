@@ -1,16 +1,18 @@
 #include "OptionsLayerHook.hpp"
 #include "CreditsLayer.hpp"
+#include "SelectMoreOptionsLayer.h"
 
-void OptionsLayerHook::customSetup(OptionsLayer* self)
+void OptionsLayerHook::customSetupHook()
 {
-	matdash::orig<&OptionsLayerHook::customSetup>(self);
-
+	std::cout << "here?";
+	matdash::orig<&OptionsLayerHook::customSetupHook>(this);
+	std::cout << "\nmaybe here!!!";
 	// layer is a member of gjdropdownlayer apparently!!!!
-	auto layer = self->m_pLayer;
+	auto layer = this->m_pLayer;
 	unsigned int nodeCount = layer->getChildrenCount();
 
 	auto creditsSpr = ButtonSprite::create("Credits", 70, false, "goldFont.fnt", "GJ_button_01.png", 30, 1);
-	auto creditsBtn = CCMenuItemSpriteExtra::create(creditsSpr, self, (cocos2d::SEL_MenuHandler)&OptionsLayerHook::onCredits);
+	auto creditsBtn = CCMenuItemSpriteExtra::create(creditsSpr, this, (cocos2d::SEL_MenuHandler)&OptionsLayerHook::onCredits);
 	creditsBtn->setPositionY(80);
 
 	for (unsigned int i = 0; i < nodeCount; i++)
@@ -53,29 +55,36 @@ void OptionsLayerHook::customSetup(OptionsLayer* self)
 	}
 }
 
+void OptionsLayerHook::optionsButtonPressedHook(CCObject* pSender)
+{
+	SelectMoreOptionsLayer::create()->show();
+}
+
 void OptionsLayerHook::onCredits(cocos2d::CCObject* pSender)
 {
 	CreditsLayer::create()->show();
 }
 
-void PauseLayer_musicSliderChanged(int *a1)
+void PauseLayer_musicSliderChanged(CCObject *a1)
 {
-	reinterpret_cast<void(__thiscall*)(int*)>(
+	reinterpret_cast<void(__thiscall*)(CCObject*)>(
 		base + 0x1E5CE0
 	)(a1);
 }
 
-// I guess its ccobject but i might be wrong
-void OptionsLayerHook::musicSliderChanged(int *this_)
+void OptionsLayerHook::musicSliderChangedHook()
 {
-	PauseLayer_musicSliderChanged(this_);
+	PauseLayer_musicSliderChanged(this);
 }
 
 void OptionsLayerHook::LoadHooks()
 {
-	matdash::add_hook<&OptionsLayerHook::customSetup>(base + 0x1DD420);
+	matdash::add_hook<&OptionsLayerHook::customSetupHook>(base + 0x1DD420);
 	std::cout << "Hooked OptionsLayer::customSetup" << std::endl;
 
-	matdash::add_hook<&OptionsLayerHook::musicSliderChanged>(base + 0x1DDE20);
+	matdash::add_hook<&OptionsLayerHook::musicSliderChangedHook>(base + 0x1DDE20);
 	std::cout << "Hooked OptionsLayer::musicSliderChanged" << std::endl;
+
+	matdash::add_hook<&OptionsLayerHook::optionsButtonPressedHook>(base + 0x1DE120);
+	std::cout << "Hooked OptionsLayer::optionsButtonPressed" << std::endl;
 }

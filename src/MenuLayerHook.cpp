@@ -1,9 +1,9 @@
 #include "MenuLayerHook.hpp"
 #include "PlayerInfoLayer.hpp"
 
-bool MenuLayerHook::init_()
+bool MenuLayerHook::initHook()
 {
-	if (!matdash::orig<&MenuLayerHook::init_>(this)) return false;
+	if (!matdash::orig<&MenuLayerHook::initHook>(this)) return false;
 	
 	// if that variable is disabled, then show the button
 	if(!GM->getGameVariable("2301")) this->replaceAccountButton();
@@ -63,6 +63,6 @@ void MenuLayerHook::onPlayerInfo(cocos2d::CCObject* pSender)
 
 void MenuLayerHook::LoadHooks()
 {
-	matdash::add_hook<&MenuLayerHook::init_>(base + 0x1907B0);
+	matdash::add_hook<&MenuLayerHook::initHook>(base + 0x1907B0);
 	std::cout << "Hooked MenuLayer::init" << std::endl;
 }

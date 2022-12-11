@@ -1,32 +1,30 @@
 #include "LevelInfoLayerHook.hpp"
 #include "ModToolbox.hpp"
-bool LevelInfoLayerHook::init(LevelInfoLayer* self, GJGameLevel* level)
+#include "SelectMoreOptionsLayer.h"
+
+bool LevelInfoLayerHook::initHook(GJGameLevel* level)
 {
-	if(!matdash::orig<&LevelInfoLayerHook::init>(self, level)) return false;
+	if(!matdash::orig<&LevelInfoLayerHook::initHook>(this, level)) return false;
 
 	auto winSize = CCDirector::sharedDirector()->getWinSize();
 	auto visSize = CCDirector::sharedDirector()->getVisibleSize();
 
-	auto pauseBtn = CCMenuItemSpriteExtra::create(CCSprite::createWithSpriteFrameName("GJ_optionsBtn_001.png"), self, (SEL_MenuHandler)(&LevelInfoLayerHook::onMoreOptionsLayerButtonPressed));
-	pauseBtn->setScale(0.85f);
-	pauseBtn->m_fBaseScale = 0.85f;
+	auto optionsBtn = CCMenuItemSpriteExtra::create(CCSprite::createWithSpriteFrameName("GJ_optionsBtn_001.png"), this, (SEL_MenuHandler)(&LevelInfoLayerHook::onMoreOptionsLayerButtonPressed));
+	optionsBtn->setScale(0.85f);
+	optionsBtn->m_fBaseScale = 0.85f;
 	
-	
-   // pauseBtn->setPosition({winSize.width * 0.15f, winSize.height - 25});
- 
-
 	auto m = CCMenu::create();
 	m->setPosition(75, winSize.height - 25);
-	m->addChild(pauseBtn);
-	self->addChild(m);
+	m->addChild(optionsBtn);
+	this->addChild(m);
 
 	auto menu = CCMenu::create();
 	menu->setPosition({0, 0});
-	self->addChild(menu);
+	this->addChild(menu);
 
-	for(unsigned int i = 0; i < self->getChildrenCount(); i++)
+	for(unsigned int i = 0; i < this->getChildrenCount(); i++)
 	{
-		CCObject* o = self->getChildren()->objectAtIndex(i);	
+		CCObject* o = this->getChildren()->objectAtIndex(i);	
 		if(auto s = dynamic_cast<CCSprite*>(o)) 
 		{
 			
@@ -56,7 +54,7 @@ bool LevelInfoLayerHook::init(LevelInfoLayer* self, GJGameLevel* level)
 
 				auto newspr = CCSprite::createWithSpriteFrameName(tname);
 				newspr->setScale(s->getScale());
-				auto btn = CCMenuItemSpriteExtra::create(newspr, self, menu_selector(LevelInfoLayerHook::onLevelBadgeInfo));
+				auto btn = CCMenuItemSpriteExtra::create(newspr, this, menu_selector(LevelInfoLayerHook::onLevelBadgeInfo));
 				btn->setTag(num);
 				btn->setPosition(untouchedPosition);
 
@@ -70,7 +68,7 @@ bool LevelInfoLayerHook::init(LevelInfoLayer* self, GJGameLevel* level)
 
 void LevelInfoLayerHook::onMoreOptionsLayerButtonPressed(cocos2d::CCObject* pSender)
 {
-	MoreOptionsLayer::create()->show();
+	SelectMoreOptionsLayer::create()->show();
 }
 
 void LevelInfoLayerHook::onLevelBadgeInfo(cocos2d::CCObject* pSender)
@@ -96,13 +94,13 @@ void LevelInfoLayerHook::onLevelBadgeInfo(cocos2d::CCObject* pSender)
 }
 	
 
-void LevelInfoLayerHook::updateLabelValues(LevelInfoLayer* self)
+void LevelInfoLayerHook::updateLabelValuesHook()
 {
-	matdash::orig<&LevelInfoLayerHook::updateLabelValues>(self);
+	matdash::orig<&LevelInfoLayerHook::updateLabelValuesHook>(this);
 
 	CCObject* node;
 
-	CCARRAY_FOREACH(self->getChildren(), node)
+	CCARRAY_FOREACH(this->getChildren(), node)
 	{
 		if(auto spr = dynamic_cast<CCSprite*>(node))
 		{
@@ -124,9 +122,9 @@ void LevelInfoLayerHook::updateLabelValues(LevelInfoLayer* self)
 
 void LevelInfoLayerHook::LoadHooks()
 {
-	matdash::add_hook<&LevelInfoLayerHook::init>(base + 0x175DF0);
+	matdash::add_hook<&LevelInfoLayerHook::initHook>(base + 0x175DF0);
 	std::cout << "Hooked LevelInfoLayer::init" << std::endl;
 
-	matdash::add_hook<&LevelInfoLayerHook::updateLabelValues>(base + 0x17B170);
+	matdash::add_hook<&LevelInfoLayerHook::updateLabelValuesHook>(base + 0x17B170);
 	std::cout << "Hooked LevelInfoLayer::updateLabelValues" << std::endl;
 }

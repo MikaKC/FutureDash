@@ -132,7 +132,7 @@ bool CreditsLayer::init(float _w, float _h, std::string title)
 	this->setup();
 
 	auto closeSpr = cocos2d::CCSprite::createWithSpriteFrameName("GJ_closeBtn_001.png");
-	closeSpr->setScale(.8f);
+	closeSpr->setScale(1.f);
 
 	auto closeBtn = CCMenuItemSpriteExtra::create(
 		closeSpr,

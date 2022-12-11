@@ -5,9 +5,6 @@
 //general purpose class for helper functions that can be useful with any class at any moment
 //(robtop - GameToolbox)
 
-
-
-
 #define public_cast(value, member) [](auto* v) { \
 	class FriendClass__; \
 	using T = std::remove_pointer<decltype(v)>::type; \
@@ -70,4 +67,19 @@ int ModToolbox::frameForIcon(IconType icon)
 		case IconType::kIconTypeRobot: return GM->getPlayerRobot();
 		case IconType::kIconTypeSpider: return GM->getPlayerSpider();
 	}
+}
+
+// You need to check for the UHD and the HD as they aren't filtered
+const char* ModToolbox::formattedTextureNameForSprite(cocos2d::CCSprite* sprite_node)
+{
+	std::string tname = ModToolbox::getTextureNameForSprite(sprite_node);
+	std::string pathToResources = CCFileUtils::sharedFileUtils()->getSearchPaths()[0] + "Resources/";
+
+	if(tname.find(pathToResources) != std::string::npos)
+	{
+		tname.erase(0, pathToResources.length());
+		return tname.c_str();
+	}
+
+	return "";
 }

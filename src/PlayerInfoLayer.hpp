@@ -22,6 +22,7 @@ public:
 	void onNextIcon(cocos2d::CCObject* pSender);
 	void updateCheckIcon(cocos2d::CCObject* pSender);
 	void onClose(cocos2d::CCObject* pSender);
+	void keyBackClicked();
 	
 	void checkAndAnimate();
 	void animateAndChangeIcon(int id, float desiredScale, IconType iconType);
