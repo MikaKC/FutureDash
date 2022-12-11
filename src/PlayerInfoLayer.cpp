@@ -206,7 +206,7 @@ void PlayerInfoLayer::onClose(cocos2d::CCObject *self)
 {
 	this->setKeyboardEnabled(false);
 	this->removeFromParentAndCleanup(true);
-	this->m_pMenuLayer->m_pProfileIconSprite->updatePlayerFrame(m_iCheckID, m_pCheckType);
+	if(!GM->getGameVariable("2301")) this->m_pMenuLayer->m_pProfileIconSprite->updatePlayerFrame(m_iCheckID, m_pCheckType);
 }
 
 

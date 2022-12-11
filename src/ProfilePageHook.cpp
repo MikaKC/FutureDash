@@ -16,7 +16,7 @@ void ProfilePageHook::loadPageWithUserInfo(ProfilePage *self, GJUserScore *score
 		if(auto s = dynamic_cast<CCSprite*>(o)) 
 		{
 			
-			auto tname = ModToolbox::getTextureName(s);
+			auto tname = ModToolbox::getTextureNameForSpriteFrame(s);
 			std::cout << i << ' ' << tname << std::endl;
 			
 			int num = 0;

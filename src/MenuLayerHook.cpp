@@ -40,7 +40,7 @@ void MenuLayerHook::replaceAccountButton()
 			{
 				auto button = (CCMenuItemSpriteExtra*)menu->getChildren()->objectAtIndex(j);
 				auto spr = (CCSprite*)button->getChildren()->objectAtIndex(0);
-				if(strcmp(ModToolbox::getTextureName(spr), "GJ_profileButton_001.png") == 0) 
+				if(strcmp(ModToolbox::getTextureNameForSpriteFrame(spr), "GJ_profileButton_001.png") == 0) 
 				{
 					m_pProfileIconSprite = SimplePlayer::create(0);
 					m_pProfileIconSprite->updatePlayerFrame(ModToolbox::frameForIcon(GM->getPlayerIconType()), GM->getPlayerIconType());

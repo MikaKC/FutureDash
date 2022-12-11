@@ -22,7 +22,7 @@
 	return c.get(reinterpret_cast<FriendeeClass__*>(v)); \
 }(value)
 
-const char* ModToolbox::getTextureName(cocos2d::CCSprite* sprite_node) {
+const char* ModToolbox::getTextureNameForSpriteFrame(cocos2d::CCSprite* sprite_node) {
 	
 	auto* texture = sprite_node->getTexture();
 	cocos2d::CCDictElement* el;
@@ -33,6 +33,22 @@ const char* ModToolbox::getTextureName(cocos2d::CCSprite* sprite_node) {
 	cocos2d::CCDICT_FOREACH(cached_frames, el) {
 		auto* frame = static_cast<cocos2d::CCSpriteFrame*>(el->getObject());
 		if (frame->getTexture() == texture && frame->getRect().equals(rect)) {
+			return el->getStrKey();
+		}
+	}
+
+	return "";
+}
+
+const char* ModToolbox::getTextureNameForSprite(cocos2d::CCSprite* sprite_node)
+{
+	auto* texture = sprite_node->getTexture();
+
+	auto* texture_cache = CCTextureCache::sharedTextureCache();
+	auto* cached_textures = public_cast(texture_cache, m_pTextures);
+	CCDictElement* el;
+	CCDICT_FOREACH(cached_textures, el) {
+		if (el->getObject() == texture) {
 			return el->getStrKey();
 		}
 	}

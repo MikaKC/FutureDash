@@ -4,6 +4,8 @@ bool PauseLayerHook::customSetup(PauseLayer *self)
 {
 	if(!matdash::orig<&PauseLayerHook::customSetup>(self)) return false;
 
+	CCDirector *dir = CCDirector::sharedDirector();
+	
 	auto winSize = CCDirector::sharedDirector()->getWinSize();
 	int nodeCount = self->getChildrenCount();
 
@@ -25,8 +27,43 @@ bool PauseLayerHook::customSetup(PauseLayer *self)
 	hideUIButton->setUserObject(self);
 	hideUIMenu->addChild(hideUIButton);
 
+	// By User
+	std::string robtopTopala = (PlayLayer::get()->m_level->m_sCreatorName == "" && 
+	PlayLayer::get()->m_level->m_nLevelID ==  1 || 
+	PlayLayer::get()->m_level->m_nLevelID ==  2 ||
+	PlayLayer::get()->m_level->m_nLevelID ==  3 ||
+	PlayLayer::get()->m_level->m_nLevelID ==  4 ||
+	PlayLayer::get()->m_level->m_nLevelID ==  5 ||
+	PlayLayer::get()->m_level->m_nLevelID ==  6 ||
+	PlayLayer::get()->m_level->m_nLevelID ==  7 ||
+	PlayLayer::get()->m_level->m_nLevelID ==  8 ||
+	PlayLayer::get()->m_level->m_nLevelID ==  9 ||
+	PlayLayer::get()->m_level->m_nLevelID ==  10||
+	PlayLayer::get()->m_level->m_nLevelID ==  11||
+	PlayLayer::get()->m_level->m_nLevelID ==  12||
+	PlayLayer::get()->m_level->m_nLevelID ==  13||
+	PlayLayer::get()->m_level->m_nLevelID ==  14||
+	PlayLayer::get()->m_level->m_nLevelID ==  15||
+	PlayLayer::get()->m_level->m_nLevelID ==  16||
+	PlayLayer::get()->m_level->m_nLevelID ==  17||
+	PlayLayer::get()->m_level->m_nLevelID ==  18||
+	PlayLayer::get()->m_level->m_nLevelID ==  19||
+	PlayLayer::get()->m_level->m_nLevelID ==  20||
+	PlayLayer::get()->m_level->m_nLevelID == 21) ? "RobTopGames" : "Player";
+
+	std::string creatorNameString = ((PlayLayer::get()->m_level->m_sCreatorName == "") ? robtopTopala : PlayLayer::get()->m_level->m_sCreatorName);
+	auto authorText = CCLabelBMFont::create(std::format("By {}", creatorNameString).c_str(), "goldFont.fnt");
+	self->addChild(authorText, 11);
+	// change by the left
+	authorText->setAlignment(CCTextAlignment::kCCTextAlignmentLeft);
+	authorText->setPosition({winSize.width / 2, 265});
+
 	bool isEditorLevel = MBO(int, MBO(void*, MBO(void*, GM, 356), 1160), 868) == 2;
-	
+
+	auto slidersMenu = CCMenu::create();
+	self->addChild(slidersMenu, 3);
+	slidersMenu->setPosition({0, 0});
+
 	for (int i = 0; i < nodeCount; i++)
 	{
 		auto nodes = reinterpret_cast<CCNode*>(self->getChildren()->objectAtIndex(i));
@@ -43,7 +80,9 @@ bool PauseLayerHook::customSetup(PauseLayer *self)
 				if(menubtn->getChildrenCount() == 1)
 				{
 					auto btnspr = reinterpret_cast<CCSprite*>(menubtn->getChildren()->objectAtIndex(0));			
-					const char* tname = ModToolbox::getTextureName(btnspr);
+					const char* tname = ModToolbox::getTextureNameForSpriteFrame(btnspr);
+
+					menu->setPositionY(200);
 
 					std::cout << j << ' ' << tname << std::endl;
 
@@ -70,9 +109,31 @@ bool PauseLayerHook::customSetup(PauseLayer *self)
 		// these got excluded by (!isEditorLevel)
 		if(auto label = dynamic_cast<CCLabelBMFont*>(nodes))
 		{
-			if(label->getPositionY() == 75.f)
+			// Theres probably a way better way to do this but whatever
+			if(strcmp(label->getString(), "SFX") == 0)
 			{
 				label->setVisible(false);
+			}
+			else if(strcmp(label->getString(), "Music") == 0)
+			{
+				label->setVisible(false);
+			}
+			// we shouldn't really check for positions its not that good and prob can cause a bunch a bugs but this is what we do now ig
+			else if(strcmp(label->getString(), std::format("{}%", PlayLayer::get()->m_level->m_nPracticePercent).c_str()) == 0 && label->getPositionY() == 190)
+			{
+				label->setPositionY(80);
+			}
+			else if(strcmp(label->getString(), std::format("{}%", PlayLayer::get()->m_level->m_nNormalPercent).c_str()) == 0 && label->getPositionY() == 240)
+			{
+				label->setPositionY(130);
+			}
+			else if(strcmp(label->getString(), "Normal Mode") == 0)
+			{
+				label->setPositionY(152);
+			}
+			else if(strcmp(label->getString(), "Practice Mode") == 0)
+			{
+				label->setPositionY(100);
 			}
 		}
 		else if(auto slider = dynamic_cast<CCLayer*>(nodes))
@@ -81,13 +142,39 @@ bool PauseLayerHook::customSetup(PauseLayer *self)
 			{
 				slider->setVisible(false);
 			}
+		} 
+		else if(auto sprite = dynamic_cast<CCSprite*>(nodes))
+		{
+			// returns the full path to the spr
+			std::string tname = ModToolbox::getTextureNameForSprite(sprite);
+			std::string pathToResources = CCFileUtils::sharedFileUtils()->getSearchPaths()[0] + "Resources/";
+
+			// I have no idea what i did
+			if(tname.find(pathToResources) != std::string::npos)
+				tname.erase(0, pathToResources.length());
+
+			std::cout << i << ' ' << tname << std::endl;
+
+			if(strcmp(tname.c_str(), "GJ_progressBar_001.png") == 0 || strcmp(tname.c_str(), "GJ_progressBar_001-hd.png") == 0 || strcmp(tname.c_str(), "GJ_progressBar_001-uhd.png") == 0)
+			{
+				auto childSpr = reinterpret_cast<CCSprite*>(sprite->getChildren()->objectAtIndex(0));
+				if(childSpr->getColor().r == 0 && childSpr->getColor().g == 255 && childSpr->getColor().b == 255)
+				{
+
+					// practice
+					sprite->setPositionY(80);
+				} else {
+
+					// normal
+					sprite->setPositionY(130);
+				}
+			}
 		}
 	}
 
 	return true;
 }
 
-// IDK what the actual function is called in gd, just called it onPracticeEnd myself (sub_5E5F60)
 void PauseLayerHook::onPracticeEnd(PauseLayer *self, cocos2d::CCObject *pSender)
 {
 	if(!GM->getGameVariable("2302"))
@@ -101,7 +188,6 @@ void PauseLayerHook::onPracticeEnd(PauseLayer *self, cocos2d::CCObject *pSender)
 
 void PauseLayerHook::onOptions(cocos2d::CCObject* pSender)
 {
-	// IDK
 	auto layer = OptionsLayer::create();
 	cocos2d::CCDirector::sharedDirector()->getRunningScene()->addChild(layer, 100);
 	layer->showLayer(false);
