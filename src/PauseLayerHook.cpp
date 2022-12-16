@@ -27,15 +27,14 @@ bool PauseLayerHook::customSetupHook()
 	hideUIButton->setUserObject(this);
 	hideUIMenu->addChild(hideUIButton);
 
-	// If the user is green registered, the game sets their name to "-" instead of ""
-	std::string robtopTopala = (PlayLayer::get()->m_level->m_sCreatorName == "") ? "RobTopGames" : "";
-
-	std::string creatorNameString = ((PlayLayer::get()->m_level->m_sCreatorName == "") ? robtopTopala : PlayLayer::get()->m_level->m_sCreatorName);
+	std::string creatorNameString = ((PlayLayer::get()->m_level->m_sCreatorName == "") ? "RobTopGames" : PlayLayer::get()->m_level->m_sCreatorName);
 	auto authorText = CCLabelBMFont::create(std::format("By {}", creatorNameString).c_str(), "goldFont.fnt");
 	this->addChild(authorText, 11);
 	// change by the left
 	authorText->setAlignment(CCTextAlignment::kCCTextAlignmentLeft);
-	authorText->setPosition({winSize.width / 2, 265});
+	authorText->setPosition({winSize.width / 2, winSize.height - 60});
+
+	const auto blueSlider = ccc3(0, 255, 255);
 
 	bool isEditorLevel = MBO(int, MBO(void*, MBO(void*, GM, 356), 1160), 868) == 2;
 
@@ -60,7 +59,7 @@ bool PauseLayerHook::customSetupHook()
 					auto btnspr = reinterpret_cast<CCSprite*>(menubtn->getChildren()->objectAtIndex(0));			
 					const char* tname = ModToolbox::getTextureNameForSpriteFrame(btnspr);
 
-					menu->setPositionY(200);
+					menu->setPositionY(menu->getPositionY() + 37.5f);
 
 					std::cout << j << ' ' << tname << std::endl;
 
@@ -95,49 +94,84 @@ bool PauseLayerHook::customSetupHook()
 			{
 				label->setVisible(false);
 			}
-			// we shouldn't really check for positions its not that good and prob can cause a bunch a bugs but this is what we do now ig
-			else if(strcmp(label->getString(), std::format("{}%", PlayLayer::get()->m_level->m_nPracticePercent).c_str()) == 0 && label->getPositionY() == 190)
+			else if(strcmp(label->getString(), std::format("{}%", PlayLayer::get()->m_level->m_nPracticePercent).c_str()) == 0)
 			{
-				label->setPositionY(70);
+				label->setVisible(false);
 			}
-			else if(strcmp(label->getString(), std::format("{}%", PlayLayer::get()->m_level->m_nNormalPercent).c_str()) == 0 && label->getPositionY() == 240)
+			else if(strcmp(label->getString(), std::format("{}%", PlayLayer::get()->m_level->m_nNormalPercent).c_str()) == 0)
 			{
-				label->setPositionY(120);
+				label->setVisible(false);
 			}
 			else if(strcmp(label->getString(), "Normal Mode") == 0)
 			{
-				label->setPositionY(142);
+				label->setVisible(false);
 			}
 			else if(strcmp(label->getString(), "Practice Mode") == 0)
 			{
-				label->setPositionY(90);
+				label->setVisible(false);
 			}
 		}
 		else if(auto slider = dynamic_cast<CCLayer*>(nodes))
 		{
-			if(slider->getPositionY() == 55.f)
+			if (slider->getChildrenCount() < 3)
 			{
 				slider->setVisible(false);
 			}
-		} 
+		}
 		else if(auto sprite = dynamic_cast<CCSprite*>(nodes))
 		{
-			// returns the full path to the spr
-			const char* tname = ModToolbox::formattedTextureNameForSprite(sprite);
+			const char* tname = ModToolbox::getTextureNameForSprite(sprite);
+			std::string tnamestr = std::string(tname);
 
 			std::cout << i << ' ' << tname << std::endl;
 
-			if(strcmp(tname, "GJ_progressBar_001.png") == 0 || strcmp(tname, "GJ_progressBar_001-hd.png") == 0 || strcmp(tname, "GJ_progressBar_001-uhd.png") == 0)
+			bool condTname = (tnamestr.find("GJ_progressBar_001-uhd.png") != std::string::npos) 
+				|| (tnamestr.find("GJ_progressBar_001-hd.png") != std::string::npos) 
+				|| (tnamestr.find("GJ_progressBar_001.png") != std::string::npos);
+
+			if(condTname)
 			{
-				auto childSpr = reinterpret_cast<CCSprite*>(sprite->getChildren()->objectAtIndex(0));
-				if(childSpr->getColor().r == 0 && childSpr->getColor().g == 255 && childSpr->getColor().b == 255)
+				auto otherObj = reinterpret_cast<CCSprite*>(sprite->getChildren()->objectAtIndex(0));
+
+				std::cout << "progressbar" << std::endl;
+
+				if (otherObj->getColor().r == blueSlider.r
+					&& otherObj->getColor().g == blueSlider.g
+					&& otherObj->getColor().b == blueSlider.b)
 				{
-					// normal mode slider
-					sprite->setPositionY(70);
-				} else {
-					//practice mode slider
-					sprite->setPositionY(120);
+					std::cout << "practicebar" << std::endl;
+					
+					sprite->setPosition(ccp(sprite->getPosition().x, sprite->getPosition().y - 70));
+
+					auto practicePercentLabel = CCLabelBMFont::create(std::format("{}%", PlayLayer::get()->m_level->m_nPracticePercent).c_str(), "bigFont.fnt");
+					practicePercentLabel->setPosition(ccp(sprite->getPosition().x, sprite->getPosition().y));
+					practicePercentLabel->setScale(0.5f);
+					this->addChild(practicePercentLabel, 10);
+					
+					auto practiceTextLabel = CCLabelBMFont::create("Practice Mode", "bigFont.fnt");
+					practiceTextLabel->setScale(0.5f);
+					this->addChild(practiceTextLabel, 10);
+					practiceTextLabel->setPosition(ccp(sprite->getPosition().x, sprite->getPositionY() + practiceTextLabel->getContentSize().height - 10));
+
 				}
+				else {
+					std::cout << "normalbar" << std::endl;
+
+					sprite->setPosition(ccp(sprite->getPosition().x, sprite->getPosition().y - 170));
+
+					auto normalPercentLabel = CCLabelBMFont::create(std::format("{}%", PlayLayer::get()->m_level->m_nNormalPercent).c_str(), "bigFont.fnt");
+					normalPercentLabel->setPosition(ccp(sprite->getPosition().x, sprite->getPosition().y));
+					normalPercentLabel->setScale(0.5f);
+					this->addChild(normalPercentLabel, 10);
+
+					auto normalTextLabel = CCLabelBMFont::create("Normal Mode", "bigFont.fnt");
+					normalTextLabel->setScale(0.5f);
+					this->addChild(normalTextLabel, 10);
+					normalTextLabel->setPosition(ccp(sprite->getPosition().x, sprite->getPositionY() + normalTextLabel->getContentSize().height - 10));
+
+				}
+
+				std::cout << "end" << std::endl;
 			}
 		}
 	}
@@ -211,7 +245,6 @@ PracticeFLProtocol* PracticeFLProtocol::create(PauseLayer *lr)
 
 void PracticeFLProtocol::PauseLayer_onResume(PauseLayer *self, bool a2)
 {
-	// needed __thiscall* not __fastcall*
 	reinterpret_cast<void(__thiscall*)(PauseLayer*, bool)>(
 		base + 0x1E5FA0
 	)(self, a2);

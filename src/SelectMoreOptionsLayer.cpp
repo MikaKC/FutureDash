@@ -4,7 +4,7 @@ SelectMoreOptionsLayer* SelectMoreOptionsLayer::create()
 {
 	auto pRet = new (std::nothrow) SelectMoreOptionsLayer;
 	
-	if (pRet && pRet->init(300, 200, "Options"))
+	if (pRet && pRet->init(275, 160, "Options"))
 	{
 		pRet->autorelease();
 		return pRet;
@@ -16,19 +16,25 @@ SelectMoreOptionsLayer* SelectMoreOptionsLayer::create()
 
 void SelectMoreOptionsLayer::setup()
 {
-	auto gameplaySprite = ButtonSprite::create("Gameplay", 0, false, "goldFont.fnt", "GJ_button_01.png", 0, 1.f);
+	auto winSize = cocos2d::CCDirector::sharedDirector()->getWinSize();
+
+	auto gameplaySprite = ButtonSprite::create("Gameplay", 120, true, "goldFont.fnt", "GJ_button_01.png", 0, 1.f);
 	auto gameplayButton = CCMenuItemSpriteExtra::create(gameplaySprite, this, menu_selector(SelectMoreOptionsLayer::onSelectorButtonPressed));
 	gameplayButton->setTag(1);
 	m_pButtonMenu->addChild(gameplayButton);
 
-	auto graphicsSprite = ButtonSprite::create("Graphics", 0, false, "goldFont.fnt", "GJ_button_01.png", 0, 1.f);
+	auto graphicsSprite = ButtonSprite::create("Graphics", 120, true, "goldFont.fnt", "GJ_button_01.png", 0, 1.f);
 	auto graphicsButton = CCMenuItemSpriteExtra::create(graphicsSprite, this, menu_selector(SelectMoreOptionsLayer::onSelectorButtonPressed));
 	graphicsButton->setTag(2);
 	m_pButtonMenu->addChild(graphicsButton);
 
-	auto editorSprite = ButtonSprite::create("Editor", 0, false, "goldFont.fnt", "GJ_button_01.png", 0, 1.f);
+	auto editorSprite = ButtonSprite::create("Editor", 120, true, "goldFont.fnt", "GJ_button_01.png", 0, 1.f);
 	auto editorButton = CCMenuItemSpriteExtra::create(editorSprite, this, menu_selector(SelectMoreOptionsLayer::onSelectorButtonPressed));
 	editorButton->setTag(3);
+
+
+	m_pButtonMenu->setPositionY(winSize.height / 2 - 10);
+
 	m_pButtonMenu->addChild(editorButton);
 
 	m_pButtonMenu->alignItemsVerticallyWithPadding(5.f);
@@ -42,6 +48,12 @@ bool SelectMoreOptionsLayer::init(float _w, float _h, std::string title)
 	if (!this->initWithColor({ 0, 0, 0, 75 })) return false;
 	this->m_pLayer = cocos2d::CCLayer::create();
 	this->addChild(this->m_pLayer);
+
+	this->setKeypadEnabled(true);
+	this->setTouchEnabled(true);
+
+	DIR->getTouchDispatcher()->incrementForcePrio(2);
+	DIR->getTouchDispatcher()->addTargetedDelegate(this, -500, true);
 
 	auto winSize = cocos2d::CCDirector::sharedDirector()->getWinSize();
 	auto bg = cocos2d::extension::CCScale9Sprite::create("GJ_square01.png", { 0.0f, 0.0f, 80.0f, 80.0f });
@@ -75,11 +87,8 @@ bool SelectMoreOptionsLayer::init(float _w, float _h, std::string title)
 	);
 	closeBtn->setUserData(reinterpret_cast<void*>(this));
 
-	closeBtn->setPosition(-m_pLrSize.width / 2 + 10, m_pLrSize.height / 2 - 10);
+	closeBtn->setPosition(-m_pLrSize.width / 2 + 10, m_pLrSize.height / 2);
 	m_pButtonMenu->addChild(closeBtn);
-
-	this->setKeypadEnabled(true);
-	this->setTouchEnabled(true);
 
 	return true;
 }

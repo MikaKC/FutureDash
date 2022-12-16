@@ -7,6 +7,7 @@
 #include "OptionsLayerHook.hpp"
 #include "PauseLayerHook.hpp"
 #include "MenuLayerHook.hpp"
+#include "EditorPauseLayerHook.h"
 
 #include <matdash/boilerplate.hpp>
 
@@ -42,7 +43,6 @@ void mod_main(HMODULE)
 	std::cout << "Loading hooks" << std::endl;
 
 	// Hooks
-	
 	matdash::add_hook<&LoadingLayer_loadAssets>(base + 0x18C8E0);
 	std::cout << "Hooked LoadingLayer::loadAssets" << std::endl;
 
@@ -53,6 +53,7 @@ void mod_main(HMODULE)
 	LevelCellHook::LoadHooks();
 	MoreOptionsLayerHook::LoadHooks();
 	ProfilePageHook::LoadHooks();
+	EditorPauseLayerHook::LoadHooks();
 
 
 	std::cout << "Finished hooking" << std::endl;
