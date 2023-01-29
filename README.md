@@ -8,7 +8,7 @@ Thank you to:<br>
 for contributing to the development of the mod!
 
 # How do I install this mod
-You can go on the official development discord (https://discord.gg/SRP3sQqGYb) to get the latest downloads, or optionnaly you can download it in the releases (might be an update or two late).
+You can download it in the [releases](https://github.com/MikaKC/FutureDash/releases/latest) tab.
 
 # How can I contribute
 ### Warning: you need to have C++ knowledge to contribute
