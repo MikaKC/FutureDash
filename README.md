@@ -1,4 +1,4 @@
-# BetterGMD
+# FutureDash
 This mod aims to improve the general experience of Geometry Dash with mods including clickable moderator badges, level badges and feature ratings! This mod also revamps the pause menu and adds a couple new features like the brand new Quick Info menu!
 
 # Contributors
